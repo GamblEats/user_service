@@ -28,6 +28,6 @@ steps:
   displayName: 'Push Docker Image'
   inputs:
     command: push
-    containerRegistry: 'gambleats.azurecr.io'
+    containerRegistry: 'gambleatscr'
     repository: 'user_service'
     tags: 'latest'
