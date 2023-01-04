@@ -19,11 +19,11 @@ class UserService
         $user = new User();
 
         if (isset($request["firstName"]) && $request["firstName"] !== "") {
-            $user->setName($request["firstName"]);
+            $user->setFirstName($request["firstName"]);
         }
 
         if (isset($request["lastName"]) && $request["lastName"] !== "") {
-            $user->setName($request["lastName"]);
+            $user->setLastName($request["lastName"]);
         }
 
         if (isset($request["email"]) && $request["email"] !== "") {

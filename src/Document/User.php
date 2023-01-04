@@ -23,7 +23,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @MongoDB\Field(type="string")
      */
-    protected mixed $name = null;
+    protected mixed $firstName = null;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    protected mixed $lastName = null;
 
     /**
      * @MongoDB\Field(type="string")
@@ -64,16 +69,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->id = $id;
     }
 
-    public function getName(): mixed
-    {
-        return $this->name;
-    }
-
-    public function setName(mixed $name): void
-    {
-        $this->name = $name;
-    }
-
     public function getEmail(): string
     {
         return $this->email;
@@ -87,7 +82,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function toArray(): array
     {
         return [
-            'name' => $this->getName(),
+            'lastName' => $this->getLastName(),
+            'firstName' => $this->getFirstName(),
             'mail' => $this->getEmail(),
             'type' => $this->getType(),
             'address' => $this->getAddress(),
@@ -139,6 +135,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAdditional(mixed $additional): void
     {
         $this->additional = $additional;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getFirstName(): mixed
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param mixed|null $firstName
+     */
+    public function setFirstName(mixed $firstName): void
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getLastName(): mixed
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param mixed|null $lastName
+     */
+    public function setLastName(mixed $lastName): void
+    {
+        $this->lastName = $lastName;
     }
 
     public function getRoles(): array
