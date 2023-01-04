@@ -28,6 +28,6 @@ steps:
   displayName: 'Push Docker Image'
   inputs:
     command: push
-    containerRegistry: 'MyACR'
-    repository: 'my-symfony-app'
+    containerRegistry: 'gambleats.azurecr.io'
+    repository: 'user_service'
     tags: 'latest'
