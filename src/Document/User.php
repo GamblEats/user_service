@@ -7,7 +7,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @MongoDB\Document
+* @MongoDB\Document(collection="users")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {

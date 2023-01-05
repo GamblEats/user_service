@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="4.22.0@fc2c6ab4d5fa5d644d8617089f012f3bb84b8703">
+  <file src="lib/Doctrine/ODM/MongoDB/Aggregation/Builder.php">
+    <InvalidArgument occurrences="1">
+      <code>$fields</code>
+    </InvalidArgument>
+  </file>
+  <file src="lib/Doctrine/ODM/MongoDB/Aggregation/Stage/GeoNear.php">
+    <InvalidReturnStatement occurrences="1">
+      <code>$this-&gt;num($limit)</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>self</code>
+    </InvalidReturnType>
+  </file>
+  <file src="lib/Doctrine/ODM/MongoDB/Event/OnClearEventArgs.php">
+    <TooManyArguments occurrences="1">
+      <code>parent::__construct($objectManager, $entityClass)</code>
+    </TooManyArguments>
+  </file>
+  <file src="lib/Doctrine/ODM/MongoDB/Iterator/CachingIterator.php">
+    <ImplementedReturnTypeMismatch occurrences="1">
+      <code>TValue|false</code>
+    </ImplementedReturnTypeMismatch>
+  </file>
+  <file src="lib/Doctrine/ODM/MongoDB/Iterator/HydratingIterator.php">
+    <ImplementedReturnTypeMismatch occurrences="1">
+      <code>TDocument|null</code>
+    </ImplementedReturnTypeMismatch>
+  </file>
+  <file src="lib/Doctrine/ODM/MongoDB/Mapping/ClassMetadata.php">
+    <ImplementedReturnTypeMismatch occurrences="2">
+      <code>array&lt;string|null&gt;</code>
+      <code>array&lt;string|null&gt;</code>
+    </ImplementedReturnTypeMismatch>
+    <InvalidArrayOffset occurrences="1">
+      <code>[$this-&gt;identifier =&gt; $this-&gt;getIdentifierValue($object)]</code>
+    </InvalidArrayOffset>
+    <LessSpecificImplementedReturnType occurrences="2">
+      <code>?string</code>
+      <code>array</code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="lib/Doctrine/ODM/MongoDB/Mapping/Driver/XmlDriver.php">
+    <InvalidArgument occurrences="2">
+      <code>$mapping</code>
+      <code>$mapping</code>
+    </InvalidArgument>
+    <RedundantCondition occurrences="15">
+      <code>assert($attributes instanceof SimpleXMLElement)</code>
+      <code>isset($xmlRoot-&gt;field)</code>
+      <code>isset($xmlRoot-&gt;id)</code>
+      <code>isset($xmlRoot-&gt;{'default-discriminator-value'})</code>
+      <code>isset($xmlRoot-&gt;{'discriminator-field'})</code>
+      <code>isset($xmlRoot-&gt;{'discriminator-map'})</code>
+      <code>isset($xmlRoot-&gt;{'embed-many'})</code>
+      <code>isset($xmlRoot-&gt;{'embed-one'})</code>
+      <code>isset($xmlRoot-&gt;{'indexes'})</code>
+      <code>isset($xmlRoot-&gt;{'lifecycle-callbacks'})</code>
+      <code>isset($xmlRoot-&gt;{'read-preference'})</code>
+      <code>isset($xmlRoot-&gt;{'reference-many'})</code>
+      <code>isset($xmlRoot-&gt;{'reference-one'})</code>
+      <code>isset($xmlRoot-&gt;{'schema-validation'})</code>
+      <code>isset($xmlRoot-&gt;{'shard-key'})</code>
+    </RedundantCondition>
+    <TypeDoesNotContainType occurrences="1">
+      <code>isset($xmlRoot-&gt;{'also-load-methods'})</code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="lib/Doctrine/ODM/MongoDB/PersistentCollection/AbstractPersistentCollectionFactory.php">
+    <InvalidArgument occurrences="1">
+      <code>new PersistentCollection($coll, $dm, $dm-&gt;getUnitOfWork())</code>
+    </InvalidArgument>
+  </file>
+  <file src="lib/Doctrine/ODM/MongoDB/PersistentCollection/PersistentCollectionTrait.php">
+    <InvalidArgument occurrences="5">
+      <code>$func</code>
+      <code>$p</code>
+      <code>$p</code>
+      <code>$p</code>
+      <code>$p</code>
+    </InvalidArgument>
+    <InvalidNullableReturnType occurrences="1">
+      <code>getMapping</code>
+    </InvalidNullableReturnType>
+    <InvalidReturnType occurrences="1">
+      <code>getTypeClass</code>
+    </InvalidReturnType>
+  </file>
+  <file src="lib/Doctrine/ODM/MongoDB/Persisters/DocumentPersister.php">
+    <RedundantFunctionCall occurrences="1">
+      <code>array_values</code>
+    </RedundantFunctionCall>
+  </file>
+  <file src="lib/Doctrine/ODM/MongoDB/Proxy/Resolver/ProxyManagerClassNameResolver.php">
+    <MoreSpecificImplementedParamType occurrences="1">
+      <code>$className</code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="lib/Doctrine/ODM/MongoDB/Query/Builder.php">
+    <InvalidArgument occurrences="1">
+      <code>$query</code>
+    </InvalidArgument>
+    <InvalidPropertyAssignmentValue occurrences="2">
+      <code>$this-&gt;query</code>
+      <code>$this-&gt;query</code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="lib/Doctrine/ODM/MongoDB/Repository/DefaultGridFSRepository.php">
+    <InvalidReturnStatement occurrences="1">
+      <code>$options + ['metadata' =&gt; (object) $metadata]</code>
+    </InvalidReturnStatement>
+  </file>
+  <file src="lib/Doctrine/ODM/MongoDB/Repository/DocumentRepository.php">
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>array</code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="lib/Doctrine/ODM/MongoDB/Types/DateImmutableType.php">
+    <RedundantCondition occurrences="1">
+      <code>$datetime instanceof DateTime</code>
+    </RedundantCondition>
+  </file>
+  <file src="lib/Doctrine/ODM/MongoDB/UnitOfWork.php">
+    <InvalidPropertyAssignmentValue occurrences="2">
+      <code>$this-&gt;identityMap</code>
+      <code>$this-&gt;originalDocumentData</code>
+    </InvalidPropertyAssignmentValue>
+    <NullableReturnStatement occurrences="1">
+      <code>$mapping['targetDocument']</code>
+    </NullableReturnStatement>
+  </file>
+  <file src="tests/Doctrine/ODM/MongoDB/Tests/DocumentManagerTest.php">
+    <InvalidArgument occurrences="1">
+      <code>['storeAs' =&gt; ClassMetadata::REFERENCE_STORE_AS_DB_REF]</code>
+    </InvalidArgument>
+  </file>
+  <file src="tests/Doctrine/ODM/MongoDB/Tests/DocumentRepositoryTest.php">
+    <InvalidArgument occurrences="1">
+      <code>new ArrayCollection([$project])</code>
+    </InvalidArgument>
+  </file>
+  <file src="tests/Doctrine/ODM/MongoDB/Tests/Functional/CollectionPersisterTest.php">
+    <InvalidArgument occurrences="3">
+      <code>[$user-&gt;categories[0]-&gt;children, $user-&gt;categories[1]-&gt;children]</code>
+      <code>[$user-&gt;categories[0]-&gt;children[0]-&gt;children, $user-&gt;categories[0]-&gt;children[1]-&gt;children]</code>
+      <code>[$user-&gt;categories[0]-&gt;children[0]-&gt;children, $user-&gt;categories[0]-&gt;children[1]-&gt;children]</code>
+    </InvalidArgument>
+  </file>
+  <file src="tests/Doctrine/ODM/MongoDB/Tests/Functional/CustomCollectionsTest.php">
+    <InvalidArgument occurrences="4">
+      <code>$i</code>
+      <code>$i</code>
+      <code>$j</code>
+      <code>$j</code>
+    </InvalidArgument>
+  </file>
+  <file src="tests/Doctrine/ODM/MongoDB/Tests/Functional/NestedDocumentsTest.php">
+    <InvalidScalarArgument occurrences="2">
+      <code>$name</code>
+      <code>$name</code>
+    </InvalidScalarArgument>
+  </file>
+  <file src="tests/Doctrine/ODM/MongoDB/Tests/Functional/Ticket/GH245Test.php">
+    <RedundantCondition occurrences="1">
+      <code>assertIsInt</code>
+    </RedundantCondition>
+  </file>
+  <file src="tests/Doctrine/ODM/MongoDB/Tests/Functional/Ticket/MODM81Test.php">
+    <InvalidNullableReturnType occurrences="1">
+      <code>DocumentManager</code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>$this-&gt;dm</code>
+    </NullableReturnStatement>
+  </file>
+  <file src="tests/Doctrine/ODM/MongoDB/Tests/Mapping/ClassMetadataTest.php">
+    <InvalidArgument occurrences="2"/>
+  </file>
+  <file src="tests/Doctrine/ODM/MongoDB/Tests/Query/BuilderTest.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>1</code>
+    </InvalidScalarArgument>
+  </file>
+  <file src="tests/Doctrine/ODM/MongoDB/Tests/Query/QueryExpressionVisitorTest.php">
+    <TooManyArguments occurrences="1">
+      <code>andX</code>
+    </TooManyArguments>
+  </file>
+  <file src="tests/Doctrine/ODM/MongoDB/Tests/QueryTest.php">
+    <InvalidArgument occurrences="1">
+      <code>['type' =&gt; -1]</code>
+    </InvalidArgument>
+  </file>
+  <file src="tests/Doctrine/ODM/MongoDB/Tests/SchemaManagerTest.php">
+    <InternalClass occurrences="2">
+      <code>new IndexInfoIteratorIterator(new ArrayIterator($indexes))</code>
+      <code>new IndexInfoIteratorIterator(new ArrayIterator([]))</code>
+    </InternalClass>
+    <InternalMethod occurrences="2">
+      <code>new IndexInfoIteratorIterator(new ArrayIterator($indexes))</code>
+      <code>new IndexInfoIteratorIterator(new ArrayIterator([]))</code>
+    </InternalMethod>
+  </file>
+  <file src="tests/Doctrine/ODM/MongoDB/Tests/Types/DateImmutableTypeTest.php">
+    <TypeDoesNotContainType occurrences="1">
+      <code>assertInstanceOf</code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="tests/Doctrine/ODM/MongoDB/Tests/Types/DateTypeTest.php">
+    <TypeDoesNotContainType occurrences="1">
+      <code>assertInstanceOf</code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="tests/Documents/CommentRepository.php">
+    <InternalMethod occurrences="2">
+      <code>loadAll</code>
+      <code>loadAll</code>
+    </InternalMethod>
+  </file>
+</files>
