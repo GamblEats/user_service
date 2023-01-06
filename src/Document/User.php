@@ -7,7 +7,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @MongoDB\Document
+ * @MongoDB\Document(collection="users")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -18,7 +18,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @MongoDB\Id
      */
-    protected mixed $id;
+    protected mixed $_id;
 
     /**
      * @MongoDB\Field(type="string")
@@ -56,12 +56,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getId(): mixed
     {
-        return $this->id;
+        return $this->_id;
     }
 
     public function setId(mixed $id): void
     {
-        $this->id = $id;
+        $this->_id = $id;
     }
 
     public function getName(): mixed

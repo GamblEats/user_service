@@ -98,5 +98,21 @@ class UserController extends AbstractController
         return $response;
     }
 
+    /**
+     * @Route("user/{id}/view", name="user_view")
+     * @param string $id
+     * @return JsonResponse
+     */
+    public function findUserById(string $id): JsonResponse
+    {
+        $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $id]);
+
+        $response = new JsonResponse();
+        $response->setStatusCode(200);
+        $response->setData($user->toArray());
+
+        return $response;
+    }
+
 //$result = $this->isCsrfTokenValid($user->getEmail(). 'e', $token); For check if valid in back
 }
