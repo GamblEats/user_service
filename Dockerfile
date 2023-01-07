@@ -1,4 +1,4 @@
-FROM php:8.0-cli
+FROM php:8.1-cli
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -8,12 +8,12 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- \
+RUN curl -sS https://getcomposer.org/installer --version="6.2.*" | php -- \
     &&  mv composer.phar /usr/local/bin/composer
 
 # Install the Symfony CLI
-RUN curl -sS https://get.symfony.com/cli/installer | bash \
-    &&  mv /root/.symfony5/bin/symfony /usr/local/bin
+RUN curl -sS https://get.symfony.com/cli/installer  | bash \
+    &&  mv /root/.symfony6/bin/symfony /usr/local/bin
 
 # Install the PHP extension for MongoDB
 RUN pecl install mongodb
@@ -26,7 +26,7 @@ COPY . /var/www/api
 WORKDIR /var/www/api
 
 # Install Composer dependencies
-RUN composer update
+RUN composer self-update
 RUN composer install --no-dev --optimize-autoloader
 
 # Expose port
