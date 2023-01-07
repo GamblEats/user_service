@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
 RUN curl -L https://github.com/symfony/flex/releases/download/v1.11.0/symfony.zip -o symfony.zip
 
 # Extract the symfony/flex package
-RUN 7z x symfony.zip -o/root/.symfony5/bin
+RUN unzip symfony.zip -d /root/.symfony5/bin
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
