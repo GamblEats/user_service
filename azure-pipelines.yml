@@ -32,7 +32,7 @@ steps:
     containerRegistry: 'gambleatscr'
     repository: 'userService_containerRepo'
     command: 'buildAndPush'
-    Dockerfile: '**/docker-compose.yml'
+    Dockerfile: '**/Dockerfile'
     tags: |
       $(Build.BuildId)
   displayName: 'Run a Docker Compose command'
