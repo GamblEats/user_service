@@ -2,9 +2,13 @@ FROM php:8.0-cli
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    && docker-php-ext-install pdo_pgsql \
+    libssl-dev \
+    pkg-config \
     && rm -rf /var/lib/apt/lists/*
+
+# Install the PHP extension for MongoDB
+RUN pecl install mongodb
+RUN docker-php-ext-enable mongodb
 
 # Copy API code into container
 COPY . /var/www/api
