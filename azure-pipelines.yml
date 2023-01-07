@@ -35,5 +35,4 @@ steps:
     Dockerfile: '**/docker-compose.yml'
     tags: |
       $(Build.BuildId)
-      latest'
   displayName: 'Run a Docker Compose command'
