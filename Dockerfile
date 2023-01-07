@@ -3,6 +3,8 @@ FROM php:8.1-cli
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     curl \
+    unzip \
+    p7zip-full \
     libicu-dev \
     libssl-dev \
     pkg-config \
@@ -17,6 +19,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 # Install the Symfony CLI
 RUN curl -sS https://get.symfony.com/cli/installer | bash \
     &&  mv /root/.symfony5/bin/symfony /usr/local/bin
+
+# Install the ZIP extension for PHP
+RUN docker-php-ext-install zip
 
 # Install the PHP extension for MongoDB
 RUN pecl install mongodb
