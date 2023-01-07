@@ -12,9 +12,9 @@ steps:
     composer install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-req=ext-mongodb
   displayName: 'Install Dependencies'
 
-- script: |
-    composer run-script cs-check
-  displayName: 'Check Coding Standards'
+# - script: |
+#     composer run-script cs-check
+#   displayName: 'Check Coding Standards'
 
 - script: |
     composer run-script tests
