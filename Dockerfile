@@ -20,6 +20,7 @@ RUN docker-php-ext-configure \
             mongodb
 
 # Install the PHP extension for MongoDB
+RUN pecl config-set php_ini "${PHP_INI_DIR}/php.ini"
 RUN pecl install mongodb
 RUN docker-php-ext-enable mongodb
 
