@@ -2,6 +2,7 @@ FROM php:8.0-cli
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
+    libicu-dev \
     libssl-dev \
     pkg-config \
     && rm -rf /var/lib/apt/lists/*
