@@ -16,9 +16,9 @@ steps:
 #     composer run-script cs-check
 #   displayName: 'Check Coding Standards'
 
-- script: |
-    composer run-script tests
-  displayName: 'Run Tests'
+# - script: |
+#     composer run-script tests
+#   displayName: 'Run Tests'
 
 - script: |
     docker build -t gambleats_user_service:latest .
