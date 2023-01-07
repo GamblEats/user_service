@@ -8,7 +8,14 @@ RUN apt-get update && apt-get install -y \
     libicu-dev \
     libssl-dev \
     pkg-config \
+    bash \
     && rm -rf /var/lib/apt/lists/*
+    
+# Download the symfony/flex package
+RUN curl -L https://github.com/symfony/flex/releases/download/v1.11.0/symfony.zip -o symfony.zip
+
+# Extract the symfony/flex package
+RUN unzip symfony.zip -d /root/.symfony5/bin
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
@@ -34,7 +41,6 @@ COPY . /var/www/api
 WORKDIR /var/www/api
 
 # Install Composer dependencies
-RUN composer self-update
 RUN composer install --no-dev --optimize-autoloader
 
 # Expose port
