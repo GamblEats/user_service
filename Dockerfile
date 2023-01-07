@@ -2,27 +2,20 @@ FROM php:8.0-cli
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
-    libicu-dev \
     libssl-dev \
     pkg-config \
     && rm -rf /var/lib/apt/lists/*
-    
 
+# Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- \
     &&  mv composer.phar /usr/local/bin/composer
 
+# Install the Symfony CLI
 RUN curl -sS https://get.symfony.com/cli/installer | bash \
     &&  mv /root/.symfony5/bin/symfony /usr/local/bin
 
-RUN docker-php-ext-configure \
-            intl \
-    &&  docker-php-ext-install \
-            mongodb
-            
 # Install the PHP extension for MongoDB
-RUN pecl config-set php_ini "${PHP_INI_DIR}/php.ini"
 RUN pecl install mongodb
-RUN docker-php-ext-install mongodb
 RUN docker-php-ext-enable mongodb
 
 # Copy API code into container
