@@ -2,13 +2,14 @@ FROM php:8.1-cli
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
+    curl \
     libicu-dev \
     libssl-dev \
     pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer --version 6.2.* | php -- \
+RUN curl -sS https://getcomposer.org/installer | php -- --version 6.2.* \
     &&  mv composer.phar /usr/local/bin/composer
 
 # Install the Symfony CLI
