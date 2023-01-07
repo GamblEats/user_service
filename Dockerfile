@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     unzip \
     p7zip-full \
+    libzip-dev \
     libicu-dev \
     libssl-dev \
     pkg-config \
