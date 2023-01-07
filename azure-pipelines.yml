@@ -9,8 +9,7 @@ variables:
 
 steps:
 - script: |
-    composer require --ignore-platform-req=ext-mongodb
-    composer install --no-interaction --prefer-dist --optimize-autoloader
+    composer install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-req=ext-mongodb
   displayName: 'Install Dependencies'
 
 - script: |
