@@ -21,7 +21,7 @@ steps:
   displayName: 'Run Tests'
 
 - script: |
-    docker build -t my-symfony-app:latest .
+    docker build -t gambleats_user_service:latest .
   displayName: 'Build Docker Image'
 
 - task: Docker@2
