@@ -9,11 +9,11 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --version 6.2.0 \
+RUN curl -sS https://getcomposer.org/installer | php -- \
     &&  mv composer.phar /usr/local/bin/composer
 
 # Install the Symfony CLI
-RUN curl -sS https://get.symfony.com/cli/installer  | bash \
+RUN curl -sS https://get.symfony.com/cli/installer | bash --version 6.2.4 \
     &&  mv /root/.symfony6/bin/symfony /usr/local/bin
 
 # Install the PHP extension for MongoDB
