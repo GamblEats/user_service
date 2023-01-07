@@ -15,8 +15,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- \
 # RUN composer install --optimize-autoloader
 
 # Install the Symfony CLI
-RUN curl -sS https://get.symfony.com/cli/installer | bash --version 6.2.4 \
-    &&  mv /root/.symfony/bin/symfony /usr/local/bin
+RUN curl -sS https://get.symfony.com/cli/installer | bash \
+    &&  mv /root/.symfony5/bin/symfony /usr/local/bin
 
 # Install the PHP extension for MongoDB
 RUN pecl install mongodb
