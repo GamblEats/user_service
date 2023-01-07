@@ -15,11 +15,6 @@ RUN apt-get update && apt-get install -y \
 RUN curl -sS https://getcomposer.org/installer | php -- \
     &&  mv composer.phar /usr/local/bin/composer
 
-# Install Flex
-RUN composer require symfony/flex
-
-# RUN composer install --optimize-autoloader
-
 # Install the Symfony CLI
 RUN curl -sS https://get.symfony.com/cli/installer | bash \
     &&  mv /root/.symfony5/bin/symfony /usr/local/bin
