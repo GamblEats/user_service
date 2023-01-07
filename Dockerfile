@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer --version="6.2.*" | php -- \
+RUN curl -sS https://getcomposer.org/installer --version 6.2.* | php -- \
     &&  mv composer.phar /usr/local/bin/composer
 
 # Install the Symfony CLI
