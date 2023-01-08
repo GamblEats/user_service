@@ -34,7 +34,7 @@ COPY . /var/www/api
 WORKDIR /var/www/api
 
 # Install Composer dependencies
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --optimize-autoloader
 
 # Expose port
 EXPOSE 8000
