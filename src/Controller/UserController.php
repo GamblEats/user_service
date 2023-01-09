@@ -83,7 +83,8 @@ class UserController extends AbstractController
                 $token = $this->csrfTokenManager->getToken($user->getEmail() . $user->getType() . $user->getPassword())->getValue(); // Make more token body request + password
                 $responseArray = [
                     'message' => 'You can Access',
-                    'token' => $token
+                    'token' => $token,
+                    'userArray' => $user->toArray()
                 ];
                 $response->setData($responseArray);
                 $response->setStatusCode(200);
