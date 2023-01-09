@@ -40,14 +40,9 @@ class Order
      */
     protected ?string $deliveryTime = null;
 
-    /**
-     * @MongoDB\Field(type="Datetime")
-     */
     protected ?DateTime $startTime = null;
+    // NEED TO ADD DATETIME
 
-    /**
-     * @MongoDB\Field(type="Datetime")
-     */
     protected ?DateTime $endTime = null;
 
     /**
