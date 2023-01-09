@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: userserviceimage 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userserviceimage
+  template:
+    metadata:
+      labels:
+        app: userserviceimage 
+    spec:
+      containers:
+        - name: userserviceimage 
+          image: gambleats.azurecr.io/userserviceimage
+          ports:
+          - containerPort: 8000
