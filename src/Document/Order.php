@@ -7,7 +7,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 
 /**
- * @MongoDB\Document(collection="restaurants")
+ * @MongoDB\Document(collection="orders")
  */
 class Order
 {
@@ -17,8 +17,19 @@ class Order
     protected mixed $_id;
 
     /**
-     * Miss Menus, Client, Restaurant, Deliverer
+     * @MongoDB\ReferenceOne(targetDocument=User::class, inversedBy="orders", storeAs="id")
      */
+    protected User $user;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    protected string $deliverer;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    protected string $restaurant;
 
     /**
      * @MongoDB\Field(type="string")
@@ -41,12 +52,12 @@ class Order
     protected ?string $deliveryTime = null;
 
     /**
-     * @MongoDB\Field(type="Datetime")
+     * @MongoDB\Field(type="date")
      */
     protected ?DateTime $startTime = null;
 
     /**
-     * @MongoDB\Field(type="Datetime")
+     * @MongoDB\Field(type="date")
      */
     protected ?DateTime $endTime = null;
 
@@ -169,8 +180,56 @@ class Order
             'status' => $this->getStatus(),
             'price' => $this->getPrice(),
             'deliveryPrice' => $this->getDeliveryPrice(),
-            'startTime' => $this->getStartTime()->format('c'),
-            'endDate' => $this->getEndTime()->format('c'),
+            'startTime' => $this->getStartTime() ? $this->getStartTime()->format('c') : null,
+            'endDate' => $this->getEndTime() ? $this->getEndTime()->format('c') : null,
         ];
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRestaurant(): string
+    {
+        return $this->restaurant;
+    }
+
+    /**
+     * @param string $restaurant
+     */
+    public function setRestaurant(string $restaurant): void
+    {
+        $this->restaurant = $restaurant;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDeliverer(): string
+    {
+        return $this->deliverer;
+    }
+
+    /**
+     * @param string $deliverer
+     */
+    public function setDeliverer(string $deliverer): void
+    {
+        $this->deliverer = $deliverer;
     }
 }

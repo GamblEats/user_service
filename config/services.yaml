@@ -6,10 +6,13 @@
 parameters:
     env(MONGODB_URL): ''
     env(MONGODB_DB): ''
+    app.restaurant_api: '%env(URL_RESTAURANT_API)%'
 
 services:
     # default configuration for services in *this* file
     _defaults:
+        bind:
+            $urlRestaurant: '%app.restaurant_api%'
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
