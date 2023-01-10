@@ -180,8 +180,8 @@ class Order
             'status' => $this->getStatus(),
             'price' => $this->getPrice(),
             'deliveryPrice' => $this->getDeliveryPrice(),
-            'startTime' => $this->getStartTime() ? $this->getStartTime()->format('c') : null,
-            'endDate' => $this->getEndTime() ? $this->getEndTime()->format('c') : null,
+            'startTime' => $this->getStartTime()?->format('c'),
+            'endDate' => $this->getEndTime()?->format('c'),
         ];
     }
 

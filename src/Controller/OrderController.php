@@ -6,6 +6,7 @@ use App\Document\Order;
 use App\Document\User;
 use App\Service\OrderService;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,16 +26,16 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("order/{idUser}/list", name="order_list")
-     * @param string $idUser
+     * @Route("orders/", name="order_list", methods={"GET"})
      * @param HttpClientInterface $httpClient
      * @return JsonResponse
      */
-    public function ordersByUser(string $idUser, HttpClientInterface $httpClient): JsonResponse
+    public function ordersByUser(Request $request, HttpClientInterface $httpClient): JsonResponse
     {
         $response = new JsonResponse();
+        $requestData = json_decode($request->getContent(), true);
         $ordersArray = [];
-        $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $idUser]);
+        $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $requestData["idUser"]]);
         $orders = $this->dm->getRepository(Order::class)->findBy(['user' => $user]);
         foreach ($orders as $order) {
             $orderArray = $order->toArray();
