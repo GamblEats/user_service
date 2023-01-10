@@ -2,6 +2,7 @@
 
 namespace App\Document;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -19,6 +20,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @MongoDB\Id
      */
     protected mixed $_id;
+
+    /**
+     * @MongoDB\ReferenceMany(targetDocument=Order::class, mappedBy="user")
+     */
+    protected ArrayCollection $orders;
+
+    /**
+     * @MongoDB\ReferenceMany(targetDocument=Order::class, mappedBy="deliverer")
+     */
+    protected ArrayCollection $ordersToDeliver;
 
     /**
      * @MongoDB\Field(type="string")
@@ -154,5 +165,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return (string) $this->getEmail();
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOrders(): ArrayCollection
+    {
+        return $this->orders;
+    }
+
+    /**
+     * @param ArrayCollection $orders
+     */
+    public function setOrders(ArrayCollection $orders): void
+    {
+        $this->orders = $orders;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOrdersToDeliver(): ArrayCollection
+    {
+        return $this->ordersToDeliver;
+    }
+
+    /**
+     * @param ArrayCollection $ordersToDeliver
+     */
+    public function setOrdersToDeliver(ArrayCollection $ordersToDeliver): void
+    {
+        $this->ordersToDeliver = $ordersToDeliver;
     }
 }
