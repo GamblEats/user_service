@@ -25,7 +25,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("order/{idUser}/list", name="order_list")
+     * @Route("orders/{idUser}", name="order_list")
      * @param string $idUser
      * @param HttpClientInterface $httpClient
      * @return JsonResponse
@@ -47,7 +47,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("order/{idUser}/list/{idOrder}/view", name="order_view")
+     * @Route("orders/{idUser}/list/{idOrder}", name="order_view")
      * @param string $idUser
      * @param string $idOrder
      * @return JsonResponse

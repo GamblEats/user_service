@@ -99,7 +99,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("user/{id}/view", name="user_view")
+     * @Route("user/{id}", name="user_view")
      * @param string $id
      * @return JsonResponse
      */
