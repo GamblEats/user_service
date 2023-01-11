@@ -39,6 +39,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @MongoDB\Field(type="string")
      */
+    protected mixed $firstName = null;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    protected mixed $lastName = null;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
     protected mixed $email = null;
 
     /**
@@ -98,7 +108,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function toArray(): array
     {
         return [
-            'name' => $this->getName(),
+            'lastName' => $this->getLastName(),
+            'firstName' => $this->getFirstName(),
             'mail' => $this->getEmail(),
             'type' => $this->getType(),
             'address' => $this->getAddress(),
@@ -197,5 +208,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setOrdersToDeliver(ArrayCollection $ordersToDeliver): void
     {
         $this->ordersToDeliver = $ordersToDeliver;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getFirstName(): mixed
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param mixed|null $firstName
+     */
+    public function setFirstName(mixed $firstName): void
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getLastName(): mixed
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param mixed|null $lastName
+     */
+    public function setLastName(mixed $lastName): void
+    {
+        $this->lastName = $lastName;
     }
 }
