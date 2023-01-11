@@ -36,7 +36,7 @@ class OrderController extends AbstractController
         $requestData = json_decode($request->getContent(), true);
         $ordersArray = [];
         $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $requestData["idUser"]]);
-        $orders = $this->dm->getRepository(Order::class)->findBy(['user' => $user]);
+        $orders = $this->dm->getRepository(Order::class)->findBy(['client' => $user]);
         foreach ($orders as $order) {
             $orderArray = $order->toArray();
             $ordersArray[] = $orderArray;
@@ -57,7 +57,7 @@ class OrderController extends AbstractController
         $response = new JsonResponse();
         $requestData = json_decode($request->getContent(), true);
         $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $requestData["idUser"]]);
-        $order = $this->dm->getRepository(Order::class)->findOneBy(['user' => $user, '_id' => $requestData["idOrder"]]);
+        $order = $this->dm->getRepository(Order::class)->findOneBy(['client' => $user, '_id' => $requestData["idOrder"]]);
         $response->setData($order->toArray());
 
         return $response;

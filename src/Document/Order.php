@@ -19,7 +19,7 @@ class Order
     /**
      * @MongoDB\ReferenceOne(targetDocument=User::class, inversedBy="orders", storeAs="id")
      */
-    protected User $user;
+    protected User $client;
 
     /**
      * @MongoDB\Field(type="string")
@@ -188,17 +188,17 @@ class Order
     /**
      * @return User
      */
-    public function getUser(): User
+    public function getClient(): User
     {
-        return $this->user;
+        return $this->client;
     }
 
     /**
      * @param User $user
      */
-    public function setUser(User $user): void
+    public function setClient(User $user): void
     {
-        $this->user = $user;
+        $this->client = $user;
     }
 
     /**

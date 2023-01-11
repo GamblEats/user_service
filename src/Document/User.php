@@ -22,7 +22,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected mixed $_id;
 
     /**
-     * @MongoDB\ReferenceMany(targetDocument=Order::class, mappedBy="user")
+     * @MongoDB\ReferenceMany(targetDocument=Order::class, mappedBy="client")
      */
     protected ArrayCollection $orders;
 

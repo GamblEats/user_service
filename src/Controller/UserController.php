@@ -99,15 +99,16 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("user/{id}", name="user_view")
-     * @param string $id
+     * @Route("user", name="user_view")
+     * @param Request $request
      * @return JsonResponse
      */
-    public function findUserById(string $id): JsonResponse
+    public function findUserById(Request $request): JsonResponse
     {
-        $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $id]);
-
         $response = new JsonResponse();
+        $requestData = json_decode($request->getContent(), true);
+        $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $requestData["idUser"]]);
+
         $response->setStatusCode(200);
         $response->setData($user->toArray());
 
