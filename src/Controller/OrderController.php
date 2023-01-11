@@ -26,7 +26,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/orders/list", name="orders_list")
+     * @Route("/orders", name="orders_list")
      * @param Request $request
      * @return JsonResponse
      */
@@ -48,17 +48,16 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/orders/{idUser}/list/{idOrder}", name="order_view")
-     * @param string $idUser
-     * @param string $idOrder
+     * @Route("/order", name="order_view")
+     * @param Request $request
      * @return JsonResponse
      */
-    public function orderByUser(string $idUser, string $idOrder): JsonResponse
+    public function orderByUser(Request $request): JsonResponse
     {
         $response = new JsonResponse();
-        $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $idUser]);
-        $order = $this->dm->getRepository(Order::class)->findBy(['user' => $user, '_id' => $idOrder]);
-
+        $requestData = json_decode($request->getContent(), true);
+        $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $requestData["idUser"]]);
+        $order = $this->dm->getRepository(Order::class)->findOneBy(['user' => $user, '_id' => $requestData["idOrder"]]);
         $response->setData($order->toArray());
 
         return $response;
