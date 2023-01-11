@@ -35,7 +35,9 @@ WORKDIR /var/www/api
 
 # Install Composer dependencies
 RUN composer install --optimize-autoloader
-RUN composer update --with-dependencies 
+RUN composer update --with-dependencies
+RUN php bin/console cache:clear --env=prod
+RUN php bin/console cache:clear
 
 # Expose port
 EXPOSE 8000
