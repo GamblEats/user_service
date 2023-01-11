@@ -26,16 +26,16 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/orders", name="orders_list")
+     * @Route("/orders/{idUser}", name="orders_list")
      * @param Request $request
+     * @param string $idUser
      * @return JsonResponse
      */
-    public function ordersByUser(Request $request): JsonResponse
+    public function ordersByUser(Request $request, string $idUser): JsonResponse
     {
         $response = new JsonResponse();
-        $requestData = json_decode($request->getContent(), true);
         $ordersArray = [];
-        $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $requestData["idUser"]]);
+        $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $idUser]);
         $orders = $this->dm->getRepository(Order::class)->findBy(['client' => $user]);
         foreach ($orders as $order) {
             $orderArray = $order->toArray();
