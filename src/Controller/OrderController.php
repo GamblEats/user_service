@@ -28,10 +28,9 @@ class OrderController extends AbstractController
     /**
      * @Route("orders/", name="order_list", methods={"GET"})
      * @param Request $request
-     * @param HttpClientInterface $httpClient
      * @return JsonResponse
      */
-    public function ordersByUser(Request $request, HttpClientInterface $httpClient): JsonResponse
+    public function ordersByUser(Request $request): JsonResponse
     {
         $response = new JsonResponse();
         $requestData = json_decode($request->getContent(), true);
