@@ -57,9 +57,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected mixed $password;
 
     /**
-     * @MongoDB\Field(type="int")
+     * @MongoDB\Field(type="raw")
      */
-    protected mixed $type = 1;
+    protected $type;
 
     /**
      * @MongoDB\Field(type="string")
@@ -132,7 +132,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getType(): mixed
     {
-        return $this->type;
+        $types = [];
+        foreach ($this->type as $key => $type) {
+            $types[] = $key;
+        }
+        return $types;
     }
 
     /**
