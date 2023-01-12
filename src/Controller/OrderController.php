@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Document\Order;
 use App\Document\User;
+use App\Service\CommunicationService;
 use App\Service\OrderService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,22 +17,25 @@ class OrderController extends AbstractController
 {
     private DocumentManager $dm;
     private OrderService $orderService;
+    private CommunicationService $communicationService;
     private string $urlRestaurant;
+    private HttpClientInterface $httpClient;
 
-    public function __construct(DocumentManager $documentManager, OrderService $orderService, string $urlRestaurant)
+    public function __construct(DocumentManager $documentManager, OrderService $orderService, string $urlRestaurant, CommunicationService $communicationService, HttpClientInterface $httpClient)
     {
         $this->dm = $documentManager;
         $this->orderService = $orderService;
         $this->urlRestaurant = $urlRestaurant;
+        $this->communicationService = $communicationService;
+        $this->httpClient = $httpClient;
     }
 
     /**
-     * @Route("/users/{idUser}/orders", name="orders_list", methods={"GET"})
-     * @param Request $request
+     * @Route("/orders/{idUser}", name="orders_list", methods={"GET"})
      * @param string $idUser
      * @return JsonResponse
      */
-    public function ordersByUser(Request $request, string $idUser): JsonResponse
+    public function ordersByUser(string $idUser): JsonResponse
     {
         $response = new JsonResponse();
         $ordersArray = [];
@@ -39,6 +43,20 @@ class OrderController extends AbstractController
         $orders = $this->dm->getRepository(Order::class)->findBy(['client' => $user]);
         foreach ($orders as $order) {
             $orderArray = $order->toArray();
+            $orderArray['restaurant'] = $this->communicationService->getRestaurantById($this->httpClient, $order->getRestaurant());
+            $orderArray['items'] = [];
+            foreach ($order->getItems() as $key => $item) {
+                $itemObject = $this->communicationService->getItemById($this->httpClient, $key);
+                if ($itemObject) {
+                    $orderArray['items'][] = $itemObject;
+                }
+            }
+            foreach ($order->getMenus() as $key => $menu) {
+                $menuObject = $this->communicationService->getMenuById($this->httpClient, $key);
+                if ($menuObject) {
+                    $orderArray['menus'][] = $menuObject;
+                }
+            }
             $ordersArray[] = $orderArray;
         }
 

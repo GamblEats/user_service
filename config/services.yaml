@@ -25,5 +25,9 @@ services:
             - '../src/Document/'
             - '../src/Kernel.php'
 
+    App\Service\CommunicationService:
+        arguments:
+            $urlRestaurant: '%app.restaurant_api%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
