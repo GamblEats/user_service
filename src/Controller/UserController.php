@@ -78,13 +78,15 @@ class UserController extends AbstractController
 
         $user = $this->dm->getRepository(User::class)->findOneBy(['email' => $requestData["email"]]);
 
-        if (isset($requestData["password"]) && $requestData !== "") {
-            if ($this->userService->passwordIsValid($user, $requestData["password"])) {
-                $token = $this->csrfTokenManager->getToken($user->getEmail() . $user->getType() . $user->getPassword())->getValue(); // Make more token body request + password
+        if (isset($requestData["password"]) && $requestData["password"] !== "" && isset($requestData["role"]) && $requestData["role"]) {
+            if ($this->userService->passwordIsValid($user, $requestData["password"]) && $this->userService->checkRoles($requestData["role"], $user)) {
+                $token = $this->csrfTokenManager->getToken($user->getEmail() . $user->getPassword())->getValue(); // Make more token body request + password
+                $userArray = $user->toArray();
+                $userArray['role'] = $requestData["role"];
                 $responseArray = [
                     'message' => 'You can Access',
                     'token' => $token,
-                    'user' => $user->toArray(),
+                    'user' => $userArray,
                 ];
                 $response->setData($responseArray);
                 $response->setStatusCode(200);
@@ -100,15 +102,15 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("user", name="user_view")
+     * @Route("/user/{id}", name="user_view", methods={"GET"})
      * @param Request $request
+     * @param string $id
      * @return JsonResponse
      */
-    public function findUserById(Request $request): JsonResponse
+    public function findUserById(Request $request, string $id): JsonResponse
     {
         $response = new JsonResponse();
-        $requestData = json_decode($request->getContent(), true);
-        $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $requestData["idUser"]]);
+        $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $id]);
 
         $response->setStatusCode(200);
         $response->setData($user->toArray());
