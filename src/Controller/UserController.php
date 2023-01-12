@@ -79,12 +79,13 @@ class UserController extends AbstractController
         $user = $this->dm->getRepository(User::class)->findOneBy(['email' => $requestData["email"]]);
 
         if (isset($requestData["password"]) && $requestData["password"] !== "" && isset($requestData["roles"]) && $requestData["roles"]) {
-            if ($this->userService->passwordIsValid($user, $requestData["password"])) {
+            if ($this->userService->passwordIsValid($user, $requestData["password"]) && $this->userService->checkRoles($requestData["roles"], $user)) {
                 $token = $this->csrfTokenManager->getToken($user->getEmail() . $user->getPassword())->getValue(); // Make more token body request + password
                 $responseArray = [
                     'message' => 'You can Access',
                     'token' => $token,
                     'user' => $user->toArray(),
+                    'roles' => $requestData["roles"]
                 ];
                 $response->setData($responseArray);
                 $response->setStatusCode(200);

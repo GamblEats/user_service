@@ -53,4 +53,9 @@ class UserService
     {
         return $this->passwordHasher->isPasswordValid($user, $password);
     }
+
+    public function checkRoles(string $roles, User $user): bool
+    {
+        return in_array($roles, $user->getType());
+    }
 }
