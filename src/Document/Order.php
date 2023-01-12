@@ -11,6 +11,15 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
  */
 class Order
 {
+    const StatusArray = [
+        'VALIDATION_PENDING',
+        'IN_PREPARATION',
+        'READY_FOR_PICKUP',
+        'ON_THE_WAY',
+        'AT_YOUR_DOOR',
+        'DELIVRED',
+    ];
+
     /**
      * @MongoDB\Id
      */
@@ -22,9 +31,9 @@ class Order
     protected User $client;
 
     /**
-     * @MongoDB\Field(type="string")
+     * @MongoDB\ReferenceOne(targetDocument=User::class, inversedBy="ordersToDeliver", storeAs="id")
      */
-    protected string $deliverer;
+    protected User $deliverer;
 
     /**
      * @MongoDB\Field(type="string")
@@ -47,9 +56,9 @@ class Order
     protected ?float $deliveryPrice = null;
 
     /**
-     * @MongoDB\Field(type="string")
+     * @MongoDB\Field(type="date")
      */
-    protected ?string $deliveryTime = null;
+    protected ?DateTime $deliveryTime = null;
 
     /**
      * @MongoDB\Field(type="date")
@@ -60,6 +69,16 @@ class Order
      * @MongoDB\Field(type="date")
      */
     protected ?DateTime $endTime = null;
+
+    /**
+     * @MongoDB\Field(type="collection", type="raw")
+     */
+    protected $items;
+
+    /**
+     * @MongoDB\Field(type="collection", type="raw")
+     */
+    protected $menus;
 
     /**
      * @return mixed
@@ -126,17 +145,17 @@ class Order
     }
 
     /**
-     * @return string|null
+     * @return DateTime|null
      */
-    public function getDeliveryTime(): ?string
+    public function getDeliveryTime(): ?DateTime
     {
         return $this->deliveryTime;
     }
 
     /**
-     * @param string|null $deliveryTime
+     * @param DateTime|null $deliveryTime
      */
-    public function setDeliveryTime(?string $deliveryTime): void
+    public function setDeliveryTime(?DateTime $deliveryTime): void
     {
         $this->deliveryTime = $deliveryTime;
     }
@@ -218,18 +237,50 @@ class Order
     }
 
     /**
-     * @return string
+     * @return User
      */
-    public function getDeliverer(): string
+    public function getDeliverer(): User
     {
         return $this->deliverer;
     }
 
     /**
-     * @param string $deliverer
+     * @param User $deliverer
      */
-    public function setDeliverer(string $deliverer): void
+    public function setDeliverer(User $deliverer): void
     {
         $this->deliverer = $deliverer;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getItems()
+    {
+        return $this->items;
+    }
+
+    /**
+     * @param mixed $items
+     */
+    public function setItems($items): void
+    {
+        $this->items = $items;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMenus()
+    {
+        return $this->menus;
+    }
+
+    /**
+     * @param mixed $menus
+     */
+    public function setMenus($menus): void
+    {
+        $this->menus = $menus;
     }
 }
