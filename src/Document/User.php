@@ -111,7 +111,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'lastName' => $this->getLastName(),
             'firstName' => $this->getFirstName(),
             'mail' => $this->getEmail(),
-            'type' => $this->getType(),
             'address' => $this->getAddress(),
             'additional' => $this->getAdditional(),
         ];
