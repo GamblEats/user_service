@@ -76,4 +76,52 @@ class OrderService
 
         return $order;
     }
+
+    public function orderEdite(array $request, DocumentManager $documentManager, Order $order): Order
+    {
+        $itemsArray = $menusArray = [];
+
+        if(isset($request["restaurant"]) && $request["restaurant"] !== $order->getRestaurant()) {
+            $order->setRestaurant($request["restaurant"]);
+        }
+
+        if(isset($request["price"]) && $request["price"] !== $order->getPrice()) {
+            $order->setPrice($request["price"]);
+        }
+
+        if(isset($request["deliveryPrice"]) && $request["deliveryPrice"] !== $order->getDeliveryPrice()) {
+            $order->setDeliveryPrice($request["deliveryPrice"]);
+        }
+
+        if(isset($request["status"]) && in_array($request["status"], Order::StatusArray)) {
+            $order->setStatus($request["status"]);
+        }
+
+        if(isset($request["client"]) && $request["client"] !== $order->getClient()->getId()) {
+            $client = $documentManager->getRepository(User::class)->findOneBy(['_id' => $request["client"]]);
+            $order->setClient($client);
+        }
+
+        if(isset($request["deliverer"]) && $request["deliverer"] !== $order->getDeliverer()->getId()) {
+            $deliverer = $documentManager->getRepository(User::class)->findOneBy(['_id' => $request["deliverer"]]);
+            $order->setDeliverer($deliverer);
+        }
+
+        if (isset($request["items"]) && $request["items"] !== $order->getItems()) {
+            foreach ($request["items"] as $item) {
+                $itemsArray[$item] = true;
+            }
+        }
+
+        if (isset($request["menus"]) && $request["menus"] !== $order->getMenus()) {
+            foreach ($request["menus"] as $menu) {
+                $menusArray[$menu] = true;
+            }
+        }
+
+        $order->setItems(json_decode(json_encode($itemsArray)));
+        $order->setMenus(json_decode(json_encode($menusArray)));
+
+        return $order;
+    }
 }
