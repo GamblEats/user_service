@@ -48,17 +48,43 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/order", name="order_view")
+     * @Route("/orders/{idUser}/{idOrder}", name="order_view", methods={"GET"})
+     * @param Request $request
+     * @param string $idUser
+     * @param string $idOrder
+     * @return JsonResponse
+     */
+    public function orderByUser(Request $request, string $idUser, string $idOrder): JsonResponse
+    {
+        $response = new JsonResponse();
+        $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $idUser]);
+        $order = $this->dm->getRepository(Order::class)->findOneBy(['client' => $user, '_id' => $idOrder]);
+        $response->setData($order->toArray());
+
+        return $response;
+    }
+
+    /**
+     * @Route("/orders", name="order_add", methods={"POST"})
      * @param Request $request
      * @return JsonResponse
      */
-    public function orderByUser(Request $request): JsonResponse
+    public function addOrder(Request $request): JsonResponse
     {
         $response = new JsonResponse();
         $requestData = json_decode($request->getContent(), true);
-        $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $requestData["idUser"]]);
-        $order = $this->dm->getRepository(Order::class)->findOneBy(['client' => $user, '_id' => $requestData["idOrder"]]);
-        $response->setData($order->toArray());
+
+        $order = $this->orderService->orderSetters($requestData, $this->dm);
+
+        try {
+            $this->dm->persist($order);
+            $this->dm->flush();
+            $response->setData('A order was be created');
+            $response->setStatusCode(200);
+        } catch (\Exception $exception) {
+            $response->setData('A order cannot be created');
+            $response->setStatusCode(404);
+        }
 
         return $response;
     }
