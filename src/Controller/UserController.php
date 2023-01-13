@@ -118,5 +118,31 @@ class UserController extends AbstractController
         return $response;
     }
 
+    /**
+     * @Route("/users/{userId}", name="user_edit", methods={"PATCH"})
+     * @param Request $request
+     * @param string $userId
+     * @return JsonResponse
+     */
+    public function editUser(Request $request, string $userId): JsonResponse
+    {
+        $response = new JsonResponse();
+        $requestData = json_decode($request->getContent(), true);
+        $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $userId]);
+        $newUser = $this->userService->userEdite($user, $requestData);
+
+        try {
+            $this->dm->persist($newUser);
+            $this->dm->flush();
+            $response->setData('The user ' . $userId . ' was editing.');
+            $response->setStatusCode(200);
+        }
+        catch (\Exception $exception) {
+            dd($exception);
+        }
+
+        return $response;
+    }
+
 //$result = $this->isCsrfTokenValid($user->getEmail(). 'e', $token); For check if valid in back
 }

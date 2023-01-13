@@ -49,6 +49,39 @@ class UserService
         return $user;
     }
 
+    public function userEdite(User $user, array $request): User
+    {
+        if(isset($request["firstName"]) && $request["firstName"] !== $user->getFirstName()) {
+            $user->setFirstName($request["firstName"]);
+        }
+
+        if(isset($request["lastName"]) && $request["lastName"] !== $user->getLastName()) {
+            $user->setLastName($request["lastName"]);
+        }
+
+        if(isset($request["email"]) && $request["email"] !== $user->getEmail()) {
+            $user->setEmail($request["email"]);
+        }
+
+        if(isset($request["password"]) && $request["password"] !== $user->getPassword()) {
+            $hashedPassword = $this->passwordHasher->hashPassword(
+                $user,
+                $request["password"]
+            );
+            $user->setPassword($hashedPassword);
+        }
+
+        if(isset($request["address"]) && $request["address"] !== $user->getAddress()) {
+            $user->setAddress($request["address"]);
+        }
+
+        if(isset($request["additional"]) && $request["additional"] !== $user->getAdditional()) {
+            $user->setAdditional($request["additional"]);
+        }
+
+        return $user;
+    }
+
     public function passwordIsValid(User $user,string $password): bool
     {
         return $this->passwordHasher->isPasswordValid($user, $password);
