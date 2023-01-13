@@ -7,8 +7,8 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 
 
 /**
- * @MongoDB\Document(collection="orders")
- */
+ * @MongoDB\Document(collection="orders", repositoryClass="App\Repository\OrderRepository")
+*/
 class Order
 {
     const StatusArray = [
@@ -64,6 +64,11 @@ class Order
      * @MongoDB\Field(type="date")
      */
     protected ?DateTime $startTime = null;
+
+    /**
+     * @MongoDB\Field(type="date")
+     */
+    protected ?DateTime $deliveryStartTime = null;
 
     /**
      * @MongoDB\Field(type="date")
@@ -282,5 +287,21 @@ class Order
     public function setMenus($menus): void
     {
         $this->menus = $menus;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getDeliveryStartTime(): ?DateTime
+    {
+        return $this->deliveryStartTime;
+    }
+
+    /**
+     * @param DateTime|null $deliveryStartTime
+     */
+    public function setDeliveryStartTime(?DateTime $deliveryStartTime): void
+    {
+        $this->deliveryStartTime = $deliveryStartTime;
     }
 }

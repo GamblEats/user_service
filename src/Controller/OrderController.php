@@ -6,6 +6,7 @@ use App\Document\Order;
 use App\Document\User;
 use App\Service\CommunicationService;
 use App\Service\OrderService;
+use DateTime;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -153,6 +154,77 @@ class OrderController extends AbstractController
             $response->setData('A order cannot be deleted');
             $response->setStatusCode(404);
         }
+
+        return $response;
+    }
+
+    /**
+     * @Route("/stats/restaurants/{idRestaurant}", name="orders_restaurants_stat", methods={"GET"})
+     * @param string $idRestaurant
+     * @return JsonResponse
+     */
+    public function ordersByRestaurant(string $idRestaurant): JsonResponse
+    {
+        $response = new JsonResponse();
+        $date = new DateTime();
+        $data = [];
+        $tempItemCount = [];
+        $data["ordersCount"] = [];
+        $data["itemCount"] = [];
+        $temp = [];
+        for ($i = 1; $i <= 31; $i++) {
+            $newDate = new DateTime();
+            $actualDate = $newDate->modify('-' . $i . 'days')->format('Y-m-d');
+            $temp[$actualDate] = [];
+            $temp[$actualDate]["nbOrders"] = 0;
+            $temp[$actualDate]["price"] = 0;
+        }
+        $averagePriceOrder = 0;
+        $averageTimeOrder = 0;
+        $orders = $this->dm->getRepository(Order::class)->ordersByDateAndRestaurant($idRestaurant, $date->modify('-1 months'));
+        $ordersCount = count($orders) !== 0 ? count($orders) : 1;
+        /** @var Order $order */
+        foreach ($orders as $order) {
+            $averagePriceOrder += $order->getPrice();
+            if ($order->getDeliveryStartTime() && $order->getStartTime()) {
+                $averageTimeOrder += ($order->getDeliveryStartTime()->getTimestamp() - $order->getStartTime()->getTimestamp()) / 60;
+            }
+            foreach ($order->getItems() as $key => $value) {
+                if (isset($tempItemCount[$key])) {
+                    $tempItemCount[$key] += 1;
+                } else {
+                    $tempItemCount[$key] = 1;
+                }
+            }
+            $temp[$order->getStartTime()->format('Y-m-d')]["nbOrders"] += 1;
+            $temp[$order->getStartTime()->format('Y-m-d')]["price"] += $order->getPrice();
+        }
+
+        foreach ($temp as $key => $value) {
+            $temp2 = [
+                'date' => $key,
+                'nbOrders' => $value["nbOrders"],
+                'total' => $value["price"]
+            ];
+            $data["ordersCount"][] = $temp2;
+        }
+
+        foreach ($tempItemCount as $key => $value) {
+            $item = $this->communicationService->getItemById($this->httpClient, $key);
+            if ($item !== null) {
+                $temp3 = [
+                    "item" => $item["name"],
+                    "count" => $value,
+                ];
+                $data["itemCount"][] = $temp3;
+            }
+        }
+
+        $data["average"] = $averagePriceOrder / $ordersCount;
+        $data["averageTime"] = $averageTimeOrder / $ordersCount;
+
+        $response->setStatusCode(200);
+        $response->setData($data);
 
         return $response;
     }
