@@ -31,7 +31,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/orders/{idUser}", name="orders_list", methods={"GET"})
+     * @Route("/users/{idUser}/orders", name="orders_list", methods={"GET"})
      * @param string $idUser
      * @return JsonResponse
      */
@@ -108,15 +108,16 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/orders", name="order_edit", methods={"PUT"})
+     * @Route("/orders/{idOrder}", name="order_edit", methods={"PATCH"})
      * @param Request $request
+     * @param string $idOrder
      * @return JsonResponse
      */
-    public function editOrder(Request $request): JsonResponse
+    public function editOrder(Request $request, string $idOrder): JsonResponse
     {
         $response = new JsonResponse();
         $requestData = json_decode($request->getContent(), true);
-        $order = $this->dm->getRepository(Order::class)->findOneBy(['_id' => $requestData['idOrder']]);
+        $order = $this->dm->getRepository(Order::class)->findOneBy(['_id' => $idOrder]);
 
         $order = $this->orderService->orderEdite($requestData, $this->dm, $order);
 

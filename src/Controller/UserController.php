@@ -33,11 +33,11 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/sign-up", name="sign_up")
+     * @Route("/users/register", name="register", methods={"POST"})
      * @param Request $request
      * @return Response
      */
-    public function signUp(Request $request): Response
+    public function register(Request $request): Response
     {
         $response = new JsonResponse();
         $requestData = json_decode($request->getContent(), true);
@@ -68,7 +68,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/sign-in", name="sign_in")
+     * @Route("/users/authenticate", name="authenticate", methods={"POST"})
      */
     public function signIn(Request $request): Response
     {
@@ -102,7 +102,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/user/{id}", name="user_view", methods={"GET"})
+     * @Route("/users/{id}", name="user_view", methods={"GET"})
      * @param Request $request
      * @param string $id
      * @return JsonResponse
@@ -114,6 +114,56 @@ class UserController extends AbstractController
 
         $response->setStatusCode(200);
         $response->setData($user->toArray());
+
+        return $response;
+    }
+
+    /**
+     * @Route("/users/{userId}", name="user_edit", methods={"PATCH"})
+     * @param Request $request
+     * @param string $userId
+     * @return JsonResponse
+     */
+    public function editUser(Request $request, string $userId): JsonResponse
+    {
+        $response = new JsonResponse();
+        $requestData = json_decode($request->getContent(), true);
+        $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $userId]);
+        $newUser = $this->userService->userEdite($user, $requestData);
+
+        try {
+            $this->dm->persist($newUser);
+            $this->dm->flush();
+            $response->setData('The user ' . $userId . ' was editing.');
+            $response->setStatusCode(200);
+        }
+        catch (\Exception $exception) {
+            dd($exception);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @Route("/users/{userId}", name="user_delete", methods={"DELETE"})
+     * @param Request $request
+     * @param string $userId
+     * @return JsonResponse
+     */
+    public function deleteUser(Request $request, string $userId): JsonResponse
+    {
+        $response = new JsonResponse();
+        $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $userId]);
+
+        try {
+            $this->dm->remove($user);
+            $this->dm->flush();
+            $response->setData('The user ' . $userId . ' was deleted.');
+            $response->setStatusCode(200);
+        }
+        catch (\Exception $exception) {
+            dd($exception);
+        }
 
         return $response;
     }
