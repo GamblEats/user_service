@@ -16,7 +16,7 @@ class CommunicationService
     {
         $response = $httpClient->request(
             'GET',
-            $this->urlRestaurant . 'restaurant/' .$idRestaurant
+            $this->urlRestaurant . 'restaurants/' .$idRestaurant
         );
 
 
