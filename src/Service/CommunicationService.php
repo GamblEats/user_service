@@ -20,7 +20,7 @@ class CommunicationService
         );
 
 
-        return json_decode($response->getContent());
+        return json_decode($response->getContent(), true);
     }
 
     public function getItemById(HttpClientInterface $httpClient, string $idItem)
@@ -31,7 +31,7 @@ class CommunicationService
         );
 
 
-        return json_decode($response->getContent());
+        return json_decode($response->getContent(), true);
     }
 
     public function getMenuById(HttpClientInterface $httpClient, string $idMenu)
@@ -42,6 +42,6 @@ class CommunicationService
         );
 
 
-        return json_decode($response->getContent());
+        return json_decode($response->getContent(), true);
     }
 }
