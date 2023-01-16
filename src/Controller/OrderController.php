@@ -247,6 +247,59 @@ class OrderController extends AbstractController
 
         foreach ($orders as $order) {
             $orderArray = $order->toArray();
+            $orderArray['restaurant'] = $this->communicationService->getRestaurantById($this->httpClient, $order->getRestaurant());
+            $orderArray['items'] = [];
+            foreach ($order->getItems() as $key => $item) {
+                $itemObject = $this->communicationService->getItemById($this->httpClient, $key);
+                if ($itemObject) {
+                    $orderArray['items'][] = $itemObject;
+                }
+            }
+            foreach ($order->getMenus() as $key => $menu) {
+                $menuObject = $this->communicationService->getMenuById($this->httpClient, $key);
+                if ($menuObject) {
+                    $orderArray['menus'][] = $menuObject;
+                }
+            }
+            $ordersArray[] = $orderArray;
+        }
+
+        $response->setData($ordersArray);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/admins/restaurants/{id}", name="restaurant_all", methods={"GET"})
+     * @param Request $request
+     * @param string $id
+     * @return JsonResponse
+     */
+    public function getOrdersRestaurant(Request $request, string $id): JsonResponse
+    {
+        $response = new JsonResponse();
+        $ordersArray = [];
+        $orders = $this->dm->getRepository(Order::class)->findBy([
+            'restaurant' => $id
+        ]);
+
+
+        foreach ($orders as $order) {
+            $orderArray = $order->toArray();
+            $orderArray['restaurant'] = $this->communicationService->getRestaurantById($this->httpClient, $order->getRestaurant());
+            $orderArray['items'] = [];
+            foreach ($order->getItems() as $key => $item) {
+                $itemObject = $this->communicationService->getItemById($this->httpClient, $key);
+                if ($itemObject) {
+                    $orderArray['items'][] = $itemObject;
+                }
+            }
+            foreach ($order->getMenus() as $key => $menu) {
+                $menuObject = $this->communicationService->getMenuById($this->httpClient, $key);
+                if ($menuObject) {
+                    $orderArray['menus'][] = $menuObject;
+                }
+            }
             $ordersArray[] = $orderArray;
         }
 
