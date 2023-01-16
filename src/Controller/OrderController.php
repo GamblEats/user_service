@@ -159,7 +159,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/stats/restaurants/{idRestaurant}", name="orders_restaurants_stat", methods={"GET"})
+     * @Route("/restaurants/{idRestaurant}/stats", name="orders_restaurants_stat", methods={"GET"})
      * @param string $idRestaurant
      * @return JsonResponse
      */
