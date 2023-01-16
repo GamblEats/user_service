@@ -220,8 +220,8 @@ class OrderController extends AbstractController
             }
         }
 
-        $data["average"] = $averagePriceOrder / $ordersCount;
-        $data["averageTime"] = $averageTimeOrder / $ordersCount;
+        $data["average"] = round($averagePriceOrder / $ordersCount, 2);
+        $data["averageTime"] = round($averageTimeOrder / $ordersCount);
 
         $response->setStatusCode(200);
         $response->setData($data);
