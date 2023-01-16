@@ -14,6 +14,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ODM\MongoDB\DocumentManager as DocumentManager;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\String\ByteString;
 
 class UserController extends AbstractController
 {
@@ -42,7 +43,7 @@ class UserController extends AbstractController
         $response = new JsonResponse();
         $requestData = json_decode($request->getContent(), true);
 
-        $user = $this->userService->userSetters($requestData);
+        $user = $this->userService->userSetters($requestData, 'gambleats-' . ByteString::fromRandom(8)->toString());
 
         if ($this->dm->getRepository(User::class)->findOneBy(['email' => $requestData["email"]])) {
             $response->setData('A user is already create with this address');
@@ -78,11 +79,20 @@ class UserController extends AbstractController
 
         $user = $this->dm->getRepository(User::class)->findOneBy(['email' => $requestData["email"]]);
 
-        if (isset($requestData["password"]) && $requestData["password"] !== "" && isset($requestData["role"]) && $requestData["role"]) {
+        if ($user && isset($requestData["password"]) && $requestData["password"] !== "" && isset($requestData["role"]) && $requestData["role"]) {
             if ($this->userService->passwordIsValid($user, $requestData["password"]) && $this->userService->checkRoles($requestData["role"], $user)) {
                 $token = $this->csrfTokenManager->getToken($user->getEmail() . $user->getPassword())->getValue(); // Make more token body request + password
                 $userArray = $user->toArray();
                 $userArray['role'] = $requestData["role"];
+                $userArray['referralList'] = [];
+                if ($user->getReferral()) {
+                    foreach ($user->getReferral() as $ref) {
+                        $referalUser = $this->dm->getRepository(User::class)->findOneBy(['_id' => $ref]);
+                        if ($referalUser) {
+                            $userArray['referralList'][] = $referalUser->getFirstName() . ' ' .$referalUser->getLastName();
+                        }
+                    }
+                }
                 $responseArray = [
                     'message' => 'You can Access',
                     'token' => $token,
@@ -165,6 +175,74 @@ class UserController extends AbstractController
             dd($exception);
         }
 
+        return $response;
+    }
+
+    /**
+     * @Route("/referrals/{userId}", name="user_new_referral", methods={"POST"})
+     * @param Request $request
+     * @param string $userId
+     * @return JsonResponse
+     */
+    public function addReferral(Request $request, string $userId): Response
+    {
+        $response = new JsonResponse();
+        $requestData = json_decode($request->getContent(), true);
+        $response->setStatusCode(200);
+        $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $userId]);
+        $referralUser = $this->dm->getRepository(User::class)->findOneBy(['codeRef' => $requestData["codeRef"]]);
+        if ($user && $referralUser) {
+            $oldReferral = $user->getReferral();
+            $oldReferralUserRef = $referralUser->getReferral();
+            $newReferral = [];
+            $newReferralUserRef = [];
+            foreach ($oldReferral as $oldRef) {
+                $newReferral[$oldRef] = true;
+            }
+            foreach ($oldReferralUserRef as $oldRef) {
+                $newReferralUserRef[$oldRef] = true;
+            }
+            $newReferral[$referralUser->getId()] = true;
+            $newReferralUserRef[$user->getId()] = true;
+            $user->setReferral($newReferral);
+            $referralUser->setReferral($newReferralUserRef);
+            $this->dm->persist($user);
+            $this->dm->persist($referralUser);
+            $this->dm->flush();
+            $response->setData([
+                'actualUser' => $user->toArray(),
+                'newReferral' => $referralUser->getFirstName() . ' ' .$referralUser->getLastName()
+            ]);
+        } else {
+            $response->setData(null);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @Route("/golden/{userId}", name="user_golden", methods={"POST"})
+     * @param Request $request
+     * @param string $userId
+     * @return JsonResponse
+     */
+    public function hasWinGoldenTicket(Request $request, string $userId): Response
+    {
+        $response = new JsonResponse();
+        $response->setStatusCode(200);
+        $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $userId]);
+        if ($user) {
+            if (rand(1,100) <= $user->toArray()['referralCount']) {
+                $response->setData('you win');
+                $user->setReferral(null);
+                $this->dm->persist($user);
+                $this->dm->flush();
+            } else {
+                $response->setData('you lose');
+            }
+        } else {
+            $response->setData(null);
+        }
         return $response;
     }
 

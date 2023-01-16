@@ -72,6 +72,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected mixed $additional = null;
 
     /**
+     * @MongoDB\Field(type="raw")
+     */
+    protected $referral;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    protected mixed $codeRef = null;
+
+    /**
      * Mapping Property
      */
 
@@ -114,6 +124,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'mail' => $this->getEmail(),
             'address' => $this->getAddress(),
             'additional' => $this->getAdditional(),
+            'referralCount' => count($this->getReferral()),
+            'codeRef' => $this->getCodeRef()
         ];
     }
 
@@ -244,5 +256,43 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastName(mixed $lastName): void
     {
         $this->lastName = $lastName;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferral()
+    {
+        $referrals = [];
+        if ($this->referral) {
+            foreach ($this->referral as $key => $type) {
+                $referrals[] = $key;
+            }
+        }
+        return $referrals;
+    }
+
+    /**
+     * @param mixed $referral
+     */
+    public function setReferral($referral): void
+    {
+        $this->referral = $referral;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getCodeRef(): mixed
+    {
+        return $this->codeRef;
+    }
+
+    /**
+     * @param mixed|null $codeRef
+     */
+    public function setCodeRef(mixed $codeRef): void
+    {
+        $this->codeRef = $codeRef;
     }
 }
