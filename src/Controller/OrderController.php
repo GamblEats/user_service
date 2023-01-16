@@ -228,4 +228,30 @@ class OrderController extends AbstractController
 
         return $response;
     }
+
+    /**
+     * @Route("/admins/restaurants/{id}/pending", name="restaurant_pending", methods={"GET"})
+     * @param Request $request
+     * @param string $id
+     * @return JsonResponse
+     */
+    public function getPendingRestaurant(Request $request, string $id): JsonResponse
+    {
+        $response = new JsonResponse();
+        $ordersArray = [];
+        $orders = $this->dm->getRepository(Order::class)->findBy([
+            'status' => 'PENDING',
+            'restaurant' => $id
+        ]);
+
+
+        foreach ($orders as $order) {
+            $orderArray = $order->toArray();
+            $ordersArray[] = $orderArray;
+        }
+
+        $response->setData($ordersArray);
+
+        return $response;
+    }
 }
