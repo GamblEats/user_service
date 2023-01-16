@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Document\User;
+use App\Service\CommunicationService;
 use App\Service\UserService;
 use DateTime;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,14 +24,18 @@ class UserController extends AbstractController
     private UserPasswordHasherInterface $passwordHasher;
     private CsrfTokenManagerInterface $csrfTokenManager;
     private LoggerInterface $logger;
+    private CommunicationService $communicationService;
+    private HttpClientInterface $httpClient;
 
-    public function __construct(DocumentManager $documentManager, UserService $userService, UserPasswordHasherInterface $passwordHasher, CsrfTokenManagerInterface $csrfTokenManager, LoggerInterface $logger)
+    public function __construct(DocumentManager $documentManager, UserService $userService, UserPasswordHasherInterface $passwordHasher, CsrfTokenManagerInterface $csrfTokenManager, LoggerInterface $logger, CommunicationService $communicationService, HttpClientInterface $httpClient)
     {
         $this->dm = $documentManager;
         $this->userService = $userService;
         $this->passwordHasher = $passwordHasher;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->logger = $logger;
+        $this->communicationService = $communicationService;
+        $this->httpClient = $httpClient;
     }
 
     /**
@@ -82,6 +88,10 @@ class UserController extends AbstractController
             if ($this->userService->passwordIsValid($user, $requestData["password"]) && $this->userService->checkRoles($requestData["role"], $user)) {
                 $token = $this->csrfTokenManager->getToken($user->getEmail() . $user->getPassword())->getValue(); // Make more token body request + password
                 $userArray = $user->toArray();
+                $restaurant = $this->communicationService->getRestaurantByUserId($this->httpClient, $user->getId());
+                if ($restaurant) {
+                    $userArray["restaurantId"] = $restaurant["id"];
+                }
                 $userArray['role'] = $requestData["role"];
                 $responseArray = [
                     'message' => 'You can Access',
