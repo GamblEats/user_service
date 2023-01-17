@@ -36,9 +36,9 @@ class Order
     protected User $deliverer;
 
     /**
-     * @MongoDB\Field(type="string")
+     * @MongoDB\Field(type="string", name="restaurant")
      */
-    protected string $restaurant;
+    protected ?string $restaurant = null;
 
     /**
      * @MongoDB\Field(type="string")
@@ -226,17 +226,17 @@ class Order
     }
 
     /**
-     * @return string
+     * @return ?string
      */
-    public function getRestaurant(): string
+    public function getRestaurant(): ?string
     {
         return $this->restaurant;
     }
 
     /**
-     * @param string $restaurant
+     * @param ?string $restaurant
      */
-    public function setRestaurant(string $restaurant): void
+    public function setRestaurant(?string $restaurant): void
     {
         $this->restaurant = $restaurant;
     }

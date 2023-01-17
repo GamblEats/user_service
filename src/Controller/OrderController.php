@@ -270,7 +270,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/admins/restaurants/{id}", name="restaurant_all", methods={"GET"})
+     * @Route("/admins/restaurants/{id}", name="orders_by_restaurant", methods={"GET"})
      * @param Request $request
      * @param string $id
      * @return JsonResponse
@@ -282,7 +282,6 @@ class OrderController extends AbstractController
         $orders = $this->dm->getRepository(Order::class)->findBy([
             'restaurant' => $id
         ]);
-
 
         foreach ($orders as $order) {
             $orderArray = $order->toArray();
