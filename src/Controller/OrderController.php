@@ -204,7 +204,7 @@ class OrderController extends AbstractController
             $temp2 = [
                 'date' => $key,
                 'nbOrders' => $value["nbOrders"],
-                'total' => $value["price"]
+                'total' => round($value["price"], 2)
             ];
             $data["ordersCount"][] = $temp2;
         }
@@ -220,7 +220,7 @@ class OrderController extends AbstractController
         }
 
         $data["average"] = round($averagePriceOrder / $ordersCount, 2);
-        $data["averageTime"] = round($averageTimeOrder / $ordersCount);
+        $data["averageTime"] = round($averageTimeOrder / $ordersCount, 2);
 
         $response->setStatusCode(200);
         $response->setData($data);
