@@ -92,6 +92,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected mixed $codeRef = null;
 
     /**
+     * @MongoDB\Field(type="bool")
+     */
+    protected bool $isDeployed = false;
+
+    /**
      * Mapping Property
      */
 
@@ -137,7 +142,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'referralCount' => count($this->getReferral()),
             'codeRef' => $this->getCodeRef(),
             'city' => $this->getCity(),
-            'postalCode' => $this->getPostalCode()
+            'postalCode' => $this->getPostalCode(),
+            'isDeployed' => $this->getIsDeployed(),
+            'type' => $this->getType()
         ];
     }
 
@@ -338,5 +345,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPostalCode(?string $postalCode): void
     {
         $this->postalCode = $postalCode;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function getIsDeployed(): bool
+    {
+        return $this->isDeployed;
+    }
+
+    /**
+     * @param bool $isDeployed
+     */
+    public function setIsDeployed(bool $isDeployed): void
+    {
+        $this->isDeployed = $isDeployed;
     }
 }

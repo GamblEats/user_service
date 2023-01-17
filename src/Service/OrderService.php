@@ -26,7 +26,7 @@ class OrderService
         return $response;
     }
 
-    public function orderSetters(array $request, DocumentManager $documentManager): Order
+    public function orderSetters(array $request, DocumentManager $documentManager, CommunicationService $communicationService, HttpClientInterface $httpClient): Order
     {
         $order = new Order();
         $date = new DateTime();
@@ -58,13 +58,15 @@ class OrderService
 
         if (isset($request["items"]) && $request["items"] !== []) {
             foreach ($request["items"] as $item) {
-                $itemsArray[$item] = true;
+                $newItem = $communicationService->getItemById($httpClient, $item);
+                $itemsArray[] = $newItem;
             }
         }
 
         if (isset($request["menus"]) && $request["menus"] !== []) {
             foreach ($request["menus"] as $menu) {
-                $menusArray[$menu] = true;
+                $newMenu = $communicationService->getMenuById($httpClient, $menu);
+                $menusArray[] = $newMenu;
             }
         }
 
@@ -77,7 +79,7 @@ class OrderService
         return $order;
     }
 
-    public function orderEdite(array $request, DocumentManager $documentManager, Order $order): Order
+    public function orderEdite(array $request, DocumentManager $documentManager, Order $order, HttpClientInterface $httpClient, CommunicationService $communicationService): Order
     {
         $itemsArray = $menusArray = [];
 
@@ -107,15 +109,17 @@ class OrderService
             $order->setDeliverer($deliverer);
         }
 
-        if (isset($request["items"]) && $request["items"] !== $order->getItems()) {
+        if (isset($request["items"]) && $request["items"] !== []) {
             foreach ($request["items"] as $item) {
-                $itemsArray[$item] = true;
+                $newItem = $communicationService->getItemById($httpClient, $item);
+                $itemsArray[] = $newItem;
             }
         }
 
-        if (isset($request["menus"]) && $request["menus"] !== $order->getMenus()) {
+        if (isset($request["menus"]) && $request["menus"] !== []) {
             foreach ($request["menus"] as $menu) {
-                $menusArray[$menu] = true;
+                $newMenu = $communicationService->getMenuById($httpClient, $menu);
+                $menusArray[] = $newMenu;
             }
         }
 

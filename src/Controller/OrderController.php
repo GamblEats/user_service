@@ -44,20 +44,11 @@ class OrderController extends AbstractController
         $orders = $this->dm->getRepository(Order::class)->findBy(['client' => $user]);
         foreach ($orders as $order) {
             $orderArray = $order->toArray();
-            $orderArray['restaurant'] = $this->communicationService->getRestaurantById($this->httpClient, $order->getRestaurant());
-            $orderArray['items'] = [];
-            foreach ($order->getItems() as $key => $item) {
-                $itemObject = $this->communicationService->getItemById($this->httpClient, $key);
-                if ($itemObject) {
-                    $orderArray['items'][] = $itemObject;
-                }
-            }
-            foreach ($order->getMenus() as $key => $menu) {
-                $menuObject = $this->communicationService->getMenuById($this->httpClient, $key);
-                if ($menuObject) {
-                    $orderArray['menus'][] = $menuObject;
-                }
-            }
+            $restaurant = $this->communicationService->getRestaurantById($this->httpClient, $order->getRestaurant());
+            $orderArray['restaurant'] = [
+                "name" => $restaurant["name"],
+                "address" => $restaurant["address"],
+            ];
             $ordersArray[] = $orderArray;
         }
 
@@ -93,7 +84,7 @@ class OrderController extends AbstractController
         $response = new JsonResponse();
         $requestData = json_decode($request->getContent(), true);
 
-        $order = $this->orderService->orderSetters($requestData, $this->dm);
+        $order = $this->orderService->orderSetters($requestData, $this->dm, $this->communicationService, $this->httpClient);
 
         try {
             $this->dm->persist($order);
@@ -120,7 +111,7 @@ class OrderController extends AbstractController
         $requestData = json_decode($request->getContent(), true);
         $order = $this->dm->getRepository(Order::class)->findOneBy(['_id' => $idOrder]);
 
-        $order = $this->orderService->orderEdite($requestData, $this->dm, $order);
+        $order = $this->orderService->orderEdite($requestData, $this->dm, $order, $this->httpClient, $this->communicationService);
 
         try {
             $this->dm->persist($order);
@@ -190,10 +181,19 @@ class OrderController extends AbstractController
                 $averageTimeOrder += ($order->getDeliveryStartTime()->getTimestamp() - $order->getStartTime()->getTimestamp()) / 60;
             }
             foreach ($order->getItems() as $key => $value) {
-                if (isset($tempItemCount[$key])) {
-                    $tempItemCount[$key] += 1;
+                if (isset($tempItemCount[$value["name"]])) {
+                    $tempItemCount[$value["name"]] += 1;
                 } else {
-                    $tempItemCount[$key] = 1;
+                    $tempItemCount[$value["name"]] = 1;
+                }
+            }
+            foreach ($order->getMenus() as $key => $value) {
+                foreach ($value["items"] as $item) {
+                    if (isset($tempItemCount[$item["name"]])) {
+                        $tempItemCount[$item["name"]] += 1;
+                    } else {
+                        $tempItemCount[$item["name"]] = 1;
+                    }
                 }
             }
             $temp[$order->getStartTime()->format('Y-m-d')]["nbOrders"] += 1;
@@ -210,10 +210,9 @@ class OrderController extends AbstractController
         }
 
         foreach ($tempItemCount as $key => $value) {
-            $item = $this->communicationService->getItemById($this->httpClient, $key);
             if ($item !== null) {
                 $temp3 = [
-                    "item" => $item["name"],
+                    "item" => $key,
                     "count" => $value,
                 ];
                 $data["itemCount"][] = $temp3;
@@ -240,27 +239,12 @@ class OrderController extends AbstractController
         $response = new JsonResponse();
         $ordersArray = [];
         $orders = $this->dm->getRepository(Order::class)->findBy([
-            'status' => 'PENDING',
+            'status' => 'VALIDATION_PENDING',
             'restaurant' => $id
         ]);
 
-
         foreach ($orders as $order) {
             $orderArray = $order->toArray();
-            $orderArray['restaurant'] = $this->communicationService->getRestaurantById($this->httpClient, $order->getRestaurant());
-            $orderArray['items'] = [];
-            foreach ($order->getItems() as $key => $item) {
-                $itemObject = $this->communicationService->getItemById($this->httpClient, $key);
-                if ($itemObject) {
-                    $orderArray['items'][] = $itemObject;
-                }
-            }
-            foreach ($order->getMenus() as $key => $menu) {
-                $menuObject = $this->communicationService->getMenuById($this->httpClient, $key);
-                if ($menuObject) {
-                    $orderArray['menus'][] = $menuObject;
-                }
-            }
             $ordersArray[] = $orderArray;
         }
 
@@ -285,20 +269,6 @@ class OrderController extends AbstractController
 
         foreach ($orders as $order) {
             $orderArray = $order->toArray();
-            $orderArray['restaurant'] = $this->communicationService->getRestaurantById($this->httpClient, $order->getRestaurant());
-            $orderArray['items'] = [];
-            foreach ($order->getItems() as $key => $item) {
-                $itemObject = $this->communicationService->getItemById($this->httpClient, $key);
-                if ($itemObject) {
-                    $orderArray['items'][] = $itemObject;
-                }
-            }
-            foreach ($order->getMenus() as $key => $menu) {
-                $menuObject = $this->communicationService->getMenuById($this->httpClient, $key);
-                if ($menuObject) {
-                    $orderArray['menus'][] = $menuObject;
-                }
-            }
             $ordersArray[] = $orderArray;
         }
 
