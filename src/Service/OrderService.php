@@ -59,14 +59,14 @@ class OrderService
         if (isset($request["items"]) && $request["items"] !== []) {
             foreach ($request["items"] as $item) {
                 $newItem = $communicationService->getItemById($httpClient, $item);
-                $itemsArray[$item] = $newItem;
+                $itemsArray[] = $newItem;
             }
         }
 
         if (isset($request["menus"]) && $request["menus"] !== []) {
             foreach ($request["menus"] as $menu) {
                 $newMenu = $communicationService->getMenuById($httpClient, $menu);
-                $menusArray[$menu] = $newMenu;
+                $menusArray[] = $newMenu;
             }
         }
 
@@ -112,14 +112,14 @@ class OrderService
         if (isset($request["items"]) && $request["items"] !== []) {
             foreach ($request["items"] as $item) {
                 $newItem = $communicationService->getItemById($httpClient, $item);
-                $itemsArray[$item] = $newItem;
+                $itemsArray[] = $newItem;
             }
         }
 
         if (isset($request["menus"]) && $request["menus"] !== []) {
             foreach ($request["menus"] as $menu) {
                 $newMenu = $communicationService->getMenuById($httpClient, $menu);
-                $menusArray[$menu] = $newMenu;
+                $menusArray[] = $newMenu;
             }
         }
 
