@@ -187,6 +187,18 @@ class OrderController extends AbstractController
                     $tempItemCount[$key] = 1;
                 }
             }
+            foreach ($order->getMenus() as $key => $value) {
+                $menu = $this->communicationService->getMenuById($this->httpClient, $key);
+                if ($menu && isset($menu["items"])) {
+                    foreach ($menu["items"] as $item) {
+                        if (isset($tempItemCount[$key])) {
+                            $tempItemCount[$item["id"]] += 1;
+                        } else {
+                            $tempItemCount[$item["id"]] = 1;
+                        }
+                    }
+                }
+            }
             $temp[$order->getStartTime()->format('Y-m-d')]["nbOrders"] += 1;
             $temp[$order->getStartTime()->format('Y-m-d')]["price"] += $order->getPrice();
         }
