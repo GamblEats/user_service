@@ -72,6 +72,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected mixed $additional = null;
 
     /**
+     * @MongoDB\Field(type="string")
+     */
+    protected ?string $city = null;
+
+    /**
+     * @MongoDB\Field(type="string")
+     */
+    protected ?string $postalCode = null;
+
+    /**
      * @MongoDB\Field(type="raw")
      */
     protected $referral;
@@ -125,7 +135,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'address' => $this->getAddress(),
             'additional' => $this->getAdditional(),
             'referralCount' => count($this->getReferral()),
-            'codeRef' => $this->getCodeRef()
+            'codeRef' => $this->getCodeRef(),
+            'city' => $this->getCity(),
+            'postalCode' => $this->getPostalCode()
         ];
     }
 
@@ -294,5 +306,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCodeRef(mixed $codeRef): void
     {
         $this->codeRef = $codeRef;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    /**
+     * @param string|null $city
+     */
+    public function setCity(?string $city): void
+    {
+        $this->city = $city;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPostalCode(): ?string
+    {
+        return $this->postalCode;
+    }
+
+    /**
+     * @param string|null $postalCode
+     */
+    public function setPostalCode(?string $postalCode): void
+    {
+        $this->postalCode = $postalCode;
     }
 }
