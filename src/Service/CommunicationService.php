@@ -23,6 +23,17 @@ class CommunicationService
         return json_decode($response->getContent(), true);
     }
 
+    public function getRestaurantByUserId(HttpClientInterface $httpClient, string $idUser)
+    {
+        $response = $httpClient->request(
+            'GET',
+            $this->urlRestaurant . 'users/' .$idUser . '/restaurants'
+        );
+
+
+        return json_decode($response->getContent(), true);
+    }
+
     public function getItemById(HttpClientInterface $httpClient, string $idItem)
     {
         $response = $httpClient->request(
