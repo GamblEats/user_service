@@ -14,7 +14,7 @@ class UserService
         $this->passwordHasher = $passwordHasher;
     }
 
-    public function userSetters(array $request): User
+    public function userSetters(array $request, string $refCode): User
     {
         $user = new User();
 
@@ -45,6 +45,8 @@ class UserService
             );
             $user->setPassword($hashedPassword);
         }
+
+        $user->setCodeRef($refCode);
 
         return $user;
     }
