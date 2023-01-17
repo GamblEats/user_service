@@ -29,9 +29,11 @@ class CommunicationService
             'GET',
             $this->urlRestaurant . 'users/' .$idUser . '/restaurants'
         );
-
-
-        return json_decode($response->getContent(), true);
+        if ($response->getContent()) {
+            return json_decode($response->getContent(), true);
+        } else {
+            return null;
+        }
     }
 
     public function getItemById(HttpClientInterface $httpClient, string $idItem)
