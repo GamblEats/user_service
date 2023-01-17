@@ -237,11 +237,6 @@ class OrderController extends AbstractController
 
         foreach ($orders as $order) {
             $orderArray = $order->toArray();
-            $restaurant = $this->communicationService->getRestaurantById($this->httpClient, $order->getRestaurant());
-            $orderArray['restaurant'] = [
-                "name" => $restaurant["name"],
-                "address" => $restaurant["address"],
-            ];
             $ordersArray[] = $orderArray;
         }
 
@@ -266,11 +261,6 @@ class OrderController extends AbstractController
 
         foreach ($orders as $order) {
             $orderArray = $order->toArray();
-            $restaurant = $this->communicationService->getRestaurantById($this->httpClient, $order->getRestaurant());
-            $orderArray['restaurant'] = [
-                "name" => $restaurant["name"],
-                "address" => $restaurant["address"],
-            ];
             $ordersArray[] = $orderArray;
         }
 
