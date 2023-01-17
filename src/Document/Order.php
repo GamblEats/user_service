@@ -206,6 +206,8 @@ class Order
             'deliveryPrice' => $this->getDeliveryPrice(),
             'startTime' => $this->getStartTime()?->format('c'),
             'endDate' => $this->getEndTime()?->format('c'),
+            'items' => $this->getItems(),
+            'menus' => $this->getMenus()
         ];
     }
 
