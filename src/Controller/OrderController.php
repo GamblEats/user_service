@@ -239,7 +239,7 @@ class OrderController extends AbstractController
         $response = new JsonResponse();
         $ordersArray = [];
         $orders = $this->dm->getRepository(Order::class)->findBy([
-            'status' => 'PENDING',
+            'status' => 'VALIDATION_PENDING',
             'restaurant' => $id
         ]);
 
