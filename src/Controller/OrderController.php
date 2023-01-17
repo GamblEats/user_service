@@ -181,21 +181,18 @@ class OrderController extends AbstractController
                 $averageTimeOrder += ($order->getDeliveryStartTime()->getTimestamp() - $order->getStartTime()->getTimestamp()) / 60;
             }
             foreach ($order->getItems() as $key => $value) {
-                if (isset($tempItemCount[$key])) {
-                    $tempItemCount[$key] += 1;
+                if (isset($tempItemCount[$value["name"]])) {
+                    $tempItemCount[$value["name"]] += 1;
                 } else {
-                    $tempItemCount[$key] = 1;
+                    $tempItemCount[$value["name"]] = 1;
                 }
             }
             foreach ($order->getMenus() as $key => $value) {
-                $menu = $this->communicationService->getMenuById($this->httpClient, $key);
-                if ($menu && isset($menu["items"])) {
-                    foreach ($menu["items"] as $item) {
-                        if (isset($tempItemCount[$key])) {
-                            $tempItemCount[$item["id"]] += 1;
-                        } else {
-                            $tempItemCount[$item["id"]] = 1;
-                        }
+                foreach ($value["items"] as $item) {
+                    if (isset($tempItemCount[$item["name"]])) {
+                        $tempItemCount[$item["name"]] += 1;
+                    } else {
+                        $tempItemCount[$item["name"]] = 1;
                     }
                 }
             }
@@ -213,10 +210,9 @@ class OrderController extends AbstractController
         }
 
         foreach ($tempItemCount as $key => $value) {
-            $item = $this->communicationService->getItemById($this->httpClient, $key);
             if ($item !== null) {
                 $temp3 = [
-                    "item" => $item["name"],
+                    "item" => $key,
                     "count" => $value,
                 ];
                 $data["itemCount"][] = $temp3;
