@@ -38,6 +38,14 @@ class UserService
             $user->setType($request["phone"]);
         }
 
+        if (isset($request["city"]) && $request["city"] !== "") {
+            $user->setCity($request["city"]);
+        }
+
+        if (isset($request["postalCode"]) && $request["postalCode"] !== "") {
+            $user->setPostalCode($request["postalCode"]);
+        }
+
         if (isset($request["password"]) && $request["password"] !== "") {
             $hashedPassword = $this->passwordHasher->hashPassword(
                 $user,
@@ -79,6 +87,14 @@ class UserService
 
         if(isset($request["additional"]) && $request["additional"] !== $user->getAdditional()) {
             $user->setAdditional($request["additional"]);
+        }
+
+        if (isset($request["city"]) && $request["city"] !== $user->getCity()) {
+            $user->setCity($request["city"]);
+        }
+
+        if (isset($request["postalCode"]) && $request["postalCode"] !== $user->getPostalCode()) {
+            $user->setPostalCode($request["postalCode"]);
         }
 
         return $user;
