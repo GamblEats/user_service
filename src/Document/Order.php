@@ -218,7 +218,8 @@ class Order
             'endDate' => $this->getEndTime()?->format('c'),
             'items' => $itemsArray,
             'menus' => $menuArray,
-            'address' => $this->getClient()?->getAddress()
+            'address' => $this->getClient()?->getAddress(),
+            'restaurant' => $this->getRestaurant()
         ];
     }
 
