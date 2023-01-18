@@ -297,4 +297,25 @@ class OrderController extends AbstractController
 
         return $response;
     }
+
+    /**
+     * @Route("/orders/deliverer/{idDeliverer}", name="orders_by_city", methods={"GET"})
+     * @param Request $request
+     * @param string $idDeliverer
+     * @return JsonResponse
+     */
+    public function getOrdersByDeliverer(Request $request, string $idDeliverer)
+    {
+        $response = new JsonResponse();
+        $ordersArray = [];
+        $orders = $this->dm->getRepository(Order::class)->findAllByDeliverer($idDeliverer);
+        foreach ($orders as $order) {
+            $orderArray = $order->toArray();
+            $ordersArray[] = $orderArray;
+        }
+
+        $response->setData($ordersArray);
+
+        return $response;
+    }
 }
