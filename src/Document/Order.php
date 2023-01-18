@@ -14,10 +14,11 @@ class Order
     const StatusArray = [
         'VALIDATION_PENDING',
         'IN_PREPARATION',
-        'READY_FOR_PICKUP',
+        'READY_TO_PICKUP',
         'ON_THE_WAY',
         'AT_YOUR_DOOR',
-        'DELIVRED',
+        'DELIVERED',
+        'CANCELED',
     ];
 
     /**

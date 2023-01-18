@@ -26,7 +26,7 @@ class OrderRepository extends DocumentRepository
     {
         $qb = $this->dm->createQueryBuilder(Order::class)
             ->field('restaurant.city')->equals($city)
-            ->field('status')->equals("READY_FOR_PICKUP")
+            ->field('status')->equals("READY_TO_PICKUP")
             ->getQuery()
             ->execute()->toArray();
 
