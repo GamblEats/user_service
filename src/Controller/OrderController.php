@@ -240,7 +240,7 @@ class OrderController extends AbstractController
         $ordersArray = [];
         $orders = $this->dm->getRepository(Order::class)->findBy([
             'status' => 'VALIDATION_PENDING',
-            'restaurant' => $id
+            'restaurant.id' => $id
         ]);
 
         foreach ($orders as $order) {
@@ -264,7 +264,7 @@ class OrderController extends AbstractController
         $response = new JsonResponse();
         $ordersArray = [];
         $orders = $this->dm->getRepository(Order::class)->findBy([
-            'restaurant' => $id
+            'restaurant.id' => $id
         ]);
 
         foreach ($orders as $order) {
