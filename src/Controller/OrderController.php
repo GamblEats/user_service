@@ -308,8 +308,11 @@ class OrderController extends AbstractController
     {
         $response = new JsonResponse();
         $order = $this->dm->getRepository(Order::class)->findAllByDeliverer($idDeliverer);
-
-        $response->setData($order);
+        if ($order) {
+            $response->setData($order->toArray());
+        } else {
+            $response->setData(null);
+        }
 
         return $response;
     }

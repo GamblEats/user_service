@@ -133,11 +133,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function toArray(): array
     {
-        $notificationsArray = [];
-        foreach ($this->getNotifications() as $notification) {
-            $notificationsArray[] = $notification->toArray();
-        }
-
         return [
             'id' => $this->getId(),
             'lastName' => $this->getLastName(),
@@ -151,8 +146,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'postalCode' => $this->getPostalCode(),
             'isDeployed' => $this->getIsDeployed(),
             'type' => $this->getType(),
-            'phone' => $this->getPhone(),
-            'notifications' => $notificationsArray
+            'phone' => $this->getPhone()
         ];
     }
 

@@ -78,7 +78,7 @@ class UserController extends AbstractController
         }
 
         try {
-            $user = $this->userService->userSetters($requestData, 'gambleats-' . ByteString::fromRandom(8)->toString());
+            $user = $this->userService->userSetters($requestData, 'gambleats-' . ByteString::fromRandom(8)->toString(), $this->dm);
             $this->dm->persist($user);
             $this->dm->flush();
             $response->setData('A user was be created');

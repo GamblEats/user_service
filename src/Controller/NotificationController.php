@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Document\Notification;
+use App\Document\User;
 use App\Service\NotificationService;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,7 +23,30 @@ class NotificationController extends AbstractController
     }
 
     /**
-     * @Route("/notifications", name="notification_add", methods={"POST"})
+     * @Route("/users/{idUser}/notifications", name="notification_view", methods={"GET"})
+     * @param Request $request
+     * @param string $idUser
+     * @return JsonResponse
+     */
+    public function getNotificationByUser(Request $request, string $idUser): JsonResponse
+    {
+        $response = new JsonResponse();
+        $notificationsArray = [];
+        $notifications = $this->dm->getRepository(Notification::class)->findBy([
+            'user' => $this->dm->getRepository(User::class)->findOneBy(['_id' => $idUser])
+        ]);
+        foreach ($notifications as $notification) {
+            $notificationsArray[] = $notification->toArray();
+        }
+        $response->setData($notificationsArray);
+        $response->setStatusCode(200);
+
+
+        return $response;
+    }
+
+    /**
+     * @Route("/users/{userId}/notifications", name="notification_add", methods={"POST"})
      * @param Request $request
      * @return JsonResponse
      */
@@ -45,9 +69,34 @@ class NotificationController extends AbstractController
 
         return $response;
     }
+    /**
+     * @Route("/users/{userId}/notifications/{notifyId}", name="notif_edit", methods={"PATCH"})
+     * @param Request $request
+     * @param string $notifyId
+     * @return JsonResponse
+     */
+    public function editNotif(Request $request, string $notifyId): JsonResponse
+    {
+        $response = new JsonResponse();
+        $notif = $this->dm->getRepository(Notification::class)->findOneBy(['_id' => $notifyId]);
+
+        try {
+            $notif->setIsRead(true);
+            $this->dm->persist($notif);
+            $this->dm->flush();
+            $response->setData('The notify ' . $notifyId . ' was read.');
+            $response->setStatusCode(200);
+        }
+        catch (\Exception $exception) {
+            dd($exception);
+        }
+
+        return $response;
+    }
+
 
     /**
-     * @Route("/notifications/{notifyId}", name="notif_delete", methods={"DELETE"})
+     * @Route("/users/{userId}/notifications/{notifyId}", name="notif_delete", methods={"DELETE"})
      * @param Request $request
      * @param string $notifyId
      * @return JsonResponse

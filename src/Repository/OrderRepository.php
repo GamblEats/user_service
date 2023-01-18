@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Document\Order;
 use DateTime;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
+use MongoDB\BSON\ObjectId;
 
 class OrderRepository extends DocumentRepository
 {
@@ -36,11 +37,11 @@ class OrderRepository extends DocumentRepository
     public function findAllByDeliverer(string $idDeliverer)
     {
         $qb = $this->dm->createQueryBuilder(Order::class)
-            ->field('deliverer')->equals($idDeliverer);
+            ->field('deliverer')->equals(new ObjectId($idDeliverer));
 
         $qb->addOr($qb->expr()->field('status')->equals('ON_THE_WAY'));
         $qb->addOr($qb->expr()->field('status')->equals('AT_YOUR_DOOR'));
 
-        return $qb->getQuery()->getSingleResult()->toArray();
+        return $qb->getQuery()->getSingleResult();
     }
 }

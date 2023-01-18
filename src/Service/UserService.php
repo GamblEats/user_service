@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Document\User;
 use Cassandra\Date;
 use DateTime;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserService
@@ -16,7 +17,7 @@ class UserService
         $this->passwordHasher = $passwordHasher;
     }
 
-    public function userSetters(array $request, string $refCode): User
+    public function userSetters(array $request, string $refCode, DocumentManager $documentManager): User
     {
         $user = new User();
 
@@ -58,12 +59,29 @@ class UserService
             $user->setPassword($hashedPassword);
         }
 
+        if(isset($request["referral"]) && $request["referral"] !== "") {
+            $referral = $documentManager->getRepository(User::class)->findOneBy([
+                'codeRef' => $request["referral"]
+            ]);
+            $user->setReferral([$referral->getId() => true]);
+            $documentManager->persist($user);
+            $documentManager->flush();
+            $parrains = $referral->getReferral();
+            $parrainsArray = [];
+            foreach ($parrains as $parrain) {
+                $parrainsArray[$parrain] = true;
+            }
+            $parrainsArray[$user->getId()] = true;
+            $referral->setReferral($parrainsArray);
+            $documentManager->persist($referral);
+        }
+
         $user->setCodeRef($refCode);
 
         return $user;
     }
 
-    public function userEdite(User $user, array &$request): User
+    public function userEdite(User $user, array $request): User
     {
         if(isset($request["firstName"]) && $request["firstName"] !== $user->getFirstName()) {
             $user->setFirstName($request["firstName"]);
