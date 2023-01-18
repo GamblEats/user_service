@@ -299,7 +299,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/orders/deliverer/{idDeliverer}", name="orders_by_city", methods={"GET"})
+     * @Route("/orders/deliverer/{idDeliverer}", name="orders_by_deliver", methods={"GET"})
      * @param Request $request
      * @param string $idDeliverer
      * @return JsonResponse
