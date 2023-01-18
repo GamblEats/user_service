@@ -3,6 +3,8 @@
 namespace App\Service;
 
 use App\Document\User;
+use Cassandra\Date;
+use DateTime;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserService
@@ -61,7 +63,7 @@ class UserService
         return $user;
     }
 
-    public function userEdite(User $user, array $request): User
+    public function userEdite(User $user, array &$request): User
     {
         if(isset($request["firstName"]) && $request["firstName"] !== $user->getFirstName()) {
             $user->setFirstName($request["firstName"]);
@@ -105,6 +107,11 @@ class UserService
 
         if (isset($request["isDeployed"]) && $request["isDeployed"]) {
             $user->setIsDeployed($request["isDeployed"]);
+        }
+
+        if (isset($request["ban"]) && $request["ban"] = true) {
+            $date = new DateTime();
+            $user->setBanDate($date->modify('7 days'));
         }
 
         return $user;

@@ -2,6 +2,7 @@
 
 namespace App\Document;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as MongoDB;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -100,6 +101,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @MongoDB\Field(type="bool")
      */
     protected ?bool $isDeployed = null;
+
+    /**
+     * @MongoDB\Field(type="date")
+     */
+    protected ?DateTime $banDate = null;
 
     /**
      * Mapping Property
@@ -396,5 +402,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setNotifications(ArrayCollection $notifications): void
     {
         $this->notifications = $notifications;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getBanDate(): ?DateTime
+    {
+        return $this->banDate;
+    }
+
+    /**
+     * @param DateTime|null $banDate
+     */
+    public function setBanDate(?DateTime $banDate): void
+    {
+        $this->banDate = $banDate;
     }
 }
