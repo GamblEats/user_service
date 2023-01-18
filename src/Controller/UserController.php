@@ -257,7 +257,17 @@ class UserController extends AbstractController
         $response->setStatusCode(200);
         $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $userId]);
         if ($user) {
-            if (rand(1,100) <= $user->toArray()['referralCount']) {
+            $ordersCount = count($user->getOrders());
+            if ($ordersCount < 30) {
+                $maxNumber = 4096;
+            } else if ($ordersCount < 60) {
+                $maxNumber = 2048;
+            } else {
+                $maxNumber = 1365;
+            }
+            $increase = (1 + (0.1 * $user->toArray()['referralCount']));
+            $realMaxNumber = round($maxNumber / $increase);
+            if (rand(1,$realMaxNumber) === rand(1,$realMaxNumber)) {
                 $response->setData('you win');
                 $user->setReferral(null);
                 $this->dm->persist($user);
