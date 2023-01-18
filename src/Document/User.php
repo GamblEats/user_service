@@ -27,6 +27,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected ArrayCollection $orders;
 
     /**
+     * @MongoDB\ReferenceMany(targetDocument=Notification::class, mappedBy="user")
+     */
+    protected ArrayCollection $notifications;
+
+    /**
      * @MongoDB\ReferenceMany(targetDocument=Order::class, mappedBy="deliverer")
      */
     protected ArrayCollection $ordersToDeliver;
@@ -137,6 +142,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function toArray(): array
     {
+        $notificationsArray = [];
+        foreach ($this->getNotifications() as $notification) {
+            $notificationsArray[] = $notification->toArray();
+        }
+
         return [
             'id' => $this->getId(),
             'lastName' => $this->getLastName(),
@@ -150,7 +160,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'postalCode' => $this->getPostalCode(),
             'isDeployed' => $this->getIsDeployed(),
             'type' => $this->getType(),
-            'phone' => $this->getPhone()
+            'phone' => $this->getPhone(),
+            'notifications' => $notificationsArray
         ];
     }
 
@@ -384,5 +395,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhone(?string $phone): void
     {
         $this->phone = $phone;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getNotifications(): ArrayCollection
+    {
+        return $this->notifications;
+    }
+
+    /**
+     * @param ArrayCollection $notifications
+     */
+    public function setNotifications(ArrayCollection $notifications): void
+    {
+        $this->notifications = $notifications;
     }
 }
