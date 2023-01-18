@@ -99,7 +99,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @MongoDB\Field(type="bool")
      */
-    protected bool $isDeployed = false;
+    protected ?bool $isDeployed = null;
 
     /**
      * Mapping Property
@@ -351,17 +351,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 
     /**
-     * @return bool
+     * @return ?bool
      */
-    public function getIsDeployed(): bool
+    public function getIsDeployed(): ?bool
     {
         return $this->isDeployed;
     }
 
     /**
-     * @param bool $isDeployed
+     * @param ?bool $isDeployed
      */
-    public function setIsDeployed(bool $isDeployed): void
+    public function setIsDeployed(?bool $isDeployed): void
     {
         $this->isDeployed = $isDeployed;
     }
