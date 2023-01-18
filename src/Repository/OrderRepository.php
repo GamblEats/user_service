@@ -12,10 +12,21 @@ class OrderRepository extends DocumentRepository
     {
         $qb = $this->dm->createQueryBuilder(Order::class)
             ->find()
-            ->field('restaurant')->equals($idRestaurant)
+            ->field('restaurant.id')->equals($idRestaurant)
             ->field('startTime')->gte($date)
             ->field('startTime')->lte(new DateTime())
             ->field('status')->notEqual("CANCELED")
+            ->getQuery()
+            ->execute()->toArray();
+
+        return $qb;
+    }
+
+    public function findAllByCity(string $city)
+    {
+        $qb = $this->dm->createQueryBuilder(Order::class)
+            ->field('restaurant.city')->equals($city)
+            ->field('status')->equals("READY_FOR_PICKUP")
             ->getQuery()
             ->execute()->toArray();
 
