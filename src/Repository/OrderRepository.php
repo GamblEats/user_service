@@ -41,6 +41,6 @@ class OrderRepository extends DocumentRepository
         $qb->addOr($qb->expr()->field('status')->equals('ON_THE_WAY'));
         $qb->addOr($qb->expr()->field('status')->equals('AT_YOUR_DOOR'));
 
-        return $qb->getQuery()->execute()->toArray();
+        return $qb->getQuery()->getSingleResult()->toArray();
     }
 }

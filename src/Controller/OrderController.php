@@ -307,14 +307,9 @@ class OrderController extends AbstractController
     public function getOrdersByDeliverer(Request $request, string $idDeliverer)
     {
         $response = new JsonResponse();
-        $ordersArray = [];
-        $orders = $this->dm->getRepository(Order::class)->findAllByDeliverer($idDeliverer);
-        foreach ($orders as $order) {
-            $orderArray = $order->toArray();
-            $ordersArray[] = $orderArray;
-        }
+        $order = $this->dm->getRepository(Order::class)->findAllByDeliverer($idDeliverer);
 
-        $response->setData($ordersArray);
+        $response->setData($order);
 
         return $response;
     }
