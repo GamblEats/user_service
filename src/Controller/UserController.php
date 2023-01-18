@@ -100,11 +100,12 @@ class UserController extends AbstractController
     public function signIn(Request $request): Response
     {
         $response = new JsonResponse();
+        $today = new DateTime();
 
         $requestData = json_decode($request->getContent(), true);
         $user = $this->dm->getRepository(User::class)->findOneBy(['email' => $requestData["email"]]);
 
-        if ($user && ($user->getIsDeployed() === true || $user->getIsDeployed() === null) && isset($requestData["password"]) && $requestData["password"] !== "" && isset($requestData["role"]) && $requestData["role"]) {
+        if ($user && ($user->getBanDate() === null || $today > $user->getBanDate()) && ($user->getIsDeployed() === true || $user->getIsDeployed() === null) && isset($requestData["password"]) && $requestData["password"] !== "" && isset($requestData["role"]) && $requestData["role"]) {
             if ($this->userService->passwordIsValid($user, $requestData["password"]) && $this->userService->checkRoles($requestData["role"], $user)) {
                 $token = $this->csrfTokenManager->getToken($user->getEmail() . $user->getPassword())->getValue(); // Make more token body request + password
                 $userArray = $user->toArray();
