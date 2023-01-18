@@ -127,7 +127,7 @@ class UserService
             $user->setIsDeployed($request["isDeployed"]);
         }
 
-        if (isset($request["ban"]) && $request["ban"] = true) {
+        if (isset($request["ban"]) && $request["ban"] === true) {
             $date = new DateTime();
             $user->setBanDate($date->modify('7 days'));
         }
