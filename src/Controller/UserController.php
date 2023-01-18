@@ -65,7 +65,7 @@ class UserController extends AbstractController
                 $alreadyExist->setType($newRoles);
                 $this->dm->persist($alreadyExist);
                 $this->dm->flush();
-                $response->setStatusCode(301);
+                $response->setStatusCode(200);
                 $response->setData("You add a role");
 
                 return $response;
