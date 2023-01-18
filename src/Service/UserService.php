@@ -103,6 +103,10 @@ class UserService
             $user->setPostalCode($request["postalCode"]);
         }
 
+        if (isset($request["isDeployed"]) && $request["isDeployed"]) {
+            $user->setIsDeployed($request["isDeployed"]);
+        }
+
         return $user;
     }
 

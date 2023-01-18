@@ -102,10 +102,9 @@ class UserController extends AbstractController
         $response = new JsonResponse();
 
         $requestData = json_decode($request->getContent(), true);
-
         $user = $this->dm->getRepository(User::class)->findOneBy(['email' => $requestData["email"]]);
 
-        if ($user && isset($requestData["password"]) && $requestData["password"] !== "" && isset($requestData["role"]) && $requestData["role"]) {
+        if ($user && ($user->getIsDeployed() === true || $user->getIsDeployed() === null) && isset($requestData["password"]) && $requestData["password"] !== "" && isset($requestData["role"]) && $requestData["role"]) {
             if ($this->userService->passwordIsValid($user, $requestData["password"]) && $this->userService->checkRoles($requestData["role"], $user)) {
                 $token = $this->csrfTokenManager->getToken($user->getEmail() . $user->getPassword())->getValue(); // Make more token body request + password
                 $userArray = $user->toArray();
@@ -291,46 +290,17 @@ class UserController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function adminGetAllNotDeployedUsers(Request $request): JsonResponse
+    public function adminGetAllUsers(Request $request): JsonResponse
     {
         $response = new JsonResponse();
         $response->setStatusCode(200);
-        $users = $this->dm->getRepository(User::class)->findBy(['isDeployed' => false]);
+        $users = $this->dm->getRepository(User::class)->findAll();
         $usersArray = [];
         foreach ($users as $user) {
             $usersArray[] = $user->toArray();
         }
 
         $response->setData($usersArray);
-        return $response;
-    }
-
-
-    /**
-     * @Route("/admins/users/{idUs}", name="user_admin_edit", methods={"POST"})
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function adminEditUser(Request $request, string $idUs): JsonResponse
-    {
-        $response = new JsonResponse();
-        $requestData = json_decode($request->getContent(), true);
-        $response->setStatusCode(200);
-        $user = $this->dm->getRepository(User::class)->findOneBy(['isDeployed' => false, '_id' => $idUs]);
-        if ($requestData["deployed"]) {
-            $user->setIsDeployed(true);
-            $this->dm->persist($user);
-            $this->dm->flush();
-            $response->setData($user->toArray());
-        } else {
-            if (isset($requestData["delete"]) && $requestData["delete"]) {
-                $this->dm->remove($user);
-                $this->dm->flush();
-                $response->setData('deleted');
-            } else {
-                $response->setData('not deleted');
-            }
-        }
         return $response;
     }
 
