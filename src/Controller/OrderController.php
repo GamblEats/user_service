@@ -163,7 +163,7 @@ class OrderController extends AbstractController
         $data["ordersCount"] = [];
         $data["itemCount"] = [];
         $temp = [];
-        for ($i = 1; $i <= 31; $i++) {
+        for ($i = 0; $i <= 31; $i++) {
             $newDate = new DateTime();
             $actualDate = $newDate->modify('-' . $i . 'days')->format('Y-m-d');
             $temp[$actualDate] = [];
