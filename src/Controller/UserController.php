@@ -49,7 +49,7 @@ class UserController extends AbstractController
         $response = new JsonResponse();
         $requestData = json_decode($request->getContent(), true);
         $alreadyExist = $this->dm->getRepository(User::class)->findOneBy(['email' => $requestData["email"]]);
-        if ($alreadyExist) {
+        if ($alreadyExist && $this->userService->passwordIsValid($alreadyExist, $requestData["password"])) {
             $roles = $alreadyExist->getType();
             if (in_array($requestData["role"], $roles)) {
                 $response->setData('A user is already create with this address and this roles');
@@ -70,6 +70,11 @@ class UserController extends AbstractController
 
                 return $response;
             }
+        }
+        if ($alreadyExist && !$this->userService->passwordIsValid($alreadyExist, $requestData["password"])) {
+            $response->setData('Wrong Password');
+            $response->setStatusCode(502);
+            return $response;
         }
 
         try {
