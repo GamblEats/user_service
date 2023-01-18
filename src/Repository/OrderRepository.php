@@ -32,4 +32,15 @@ class OrderRepository extends DocumentRepository
 
         return $qb;
     }
+
+    public function findAllByDeliverer(string $idDeliverer)
+    {
+        $qb = $this->dm->createQueryBuilder(Order::class)
+            ->field('deliverer')->equals($idDeliverer);
+
+        $qb->addOr($qb->expr()->field('status')->equals('ON_THE_WAY'));
+        $qb->addOr($qb->expr()->field('status')->equals('AT_YOUR_DOOR'));
+
+        return $qb->getQuery()->getSingleResult()->toArray();
+    }
 }
