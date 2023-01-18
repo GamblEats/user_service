@@ -11,21 +11,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class OrderService
 {
-    public function getAllDataByOrder(string $urlRestaurant, Order $order, HttpClientInterface $httpClient): JsonResponse
-    {
-        $response = new JsonResponse();
-        $requestRestaurant = $httpClient->request(
-            'GET',
-            $urlRestaurant . $order->getRestaurant() . '/view'
-        );
-        $restaurant = json_decode($requestRestaurant->getContent());
-        $menus = json_decode($requestMenus->getContent());
-        $items = null;
-
-
-        return $response;
-    }
-
     public function orderSetters(array $request, DocumentManager $documentManager, CommunicationService $communicationService, HttpClientInterface $httpClient): Order
     {
         $order = new Order();
@@ -33,7 +18,8 @@ class OrderService
         $itemsArray = $menusArray = [];
 
         if (isset($request["restaurant"]) && $request["restaurant"] !== "") {
-            $order->setRestaurant($request["restaurant"]);
+            $restaurant = $communicationService->getRestaurantById($httpClient, $request["restaurant"]);
+            $order->setRestaurant($restaurant);
         }
 
         if (isset($request["client"]) && $request["client"] !== "") {
@@ -61,6 +47,7 @@ class OrderService
                 $newItem = $communicationService->getItemById($httpClient, $item);
                 $itemsArray[] = $newItem;
             }
+            $order->setItems(json_decode(json_encode($itemsArray)));
         }
 
         if (isset($request["menus"]) && $request["menus"] !== []) {
@@ -68,10 +55,9 @@ class OrderService
                 $newMenu = $communicationService->getMenuById($httpClient, $menu);
                 $menusArray[] = $newMenu;
             }
+            $order->setMenus(json_decode(json_encode($menusArray)));
         }
 
-        $order->setItems(json_decode(json_encode($itemsArray)));
-        $order->setMenus(json_decode(json_encode($menusArray)));
         $order->setStartTime($date);
         $order->setEndTime($date->modify('+1 hour'));
         $order->setDeliveryTime($date->modify('+0.5 hour'));
@@ -83,8 +69,9 @@ class OrderService
     {
         $itemsArray = $menusArray = [];
 
-        if(isset($request["restaurant"]) && $request["restaurant"] !== $order->getRestaurant()) {
-            $order->setRestaurant($request["restaurant"]);
+        if(isset($request["restaurant"])) {
+            $restaurant = $communicationService->getRestaurantById($httpClient, $request["restaurant"]);
+            $order->setRestaurant($restaurant);
         }
 
         if(isset($request["price"]) && $request["price"] !== $order->getPrice()) {
@@ -114,6 +101,7 @@ class OrderService
                 $newItem = $communicationService->getItemById($httpClient, $item);
                 $itemsArray[] = $newItem;
             }
+            $order->setItems(json_decode(json_encode($itemsArray)));
         }
 
         if (isset($request["menus"]) && $request["menus"] !== []) {
@@ -121,10 +109,8 @@ class OrderService
                 $newMenu = $communicationService->getMenuById($httpClient, $menu);
                 $menusArray[] = $newMenu;
             }
+            $order->setMenus(json_decode(json_encode($menusArray)));
         }
-
-        $order->setItems(json_decode(json_encode($itemsArray)));
-        $order->setMenus(json_decode(json_encode($menusArray)));
 
         return $order;
     }

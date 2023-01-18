@@ -276,4 +276,25 @@ class OrderController extends AbstractController
 
         return $response;
     }
+
+    /**
+     * @Route("/city/{city}/orders", name="orders_by_city", methods={"GET"})
+     * @param Request $request
+     * @param string $city
+     * @return JsonResponse
+     */
+    public function getOrdersRestaurantByCity(Request $request, string $city): JsonResponse
+    {
+        $response = new JsonResponse();
+        $ordersArray = [];
+        $orders = $this->dm->getRepository(Order::class)->findAllByCity($city);
+        foreach ($orders as $order) {
+            $orderArray = $order->toArray();
+            $ordersArray[] = $orderArray;
+        }
+
+        $response->setData($ordersArray);
+
+        return $response;
+    }
 }
