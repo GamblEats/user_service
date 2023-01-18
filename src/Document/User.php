@@ -82,6 +82,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected ?string $postalCode = null;
 
     /**
+     * @MongoDB\Field(type="string")
+     */
+    protected ?string $phone = null;
+
+    /**
      * @MongoDB\Field(type="raw")
      */
     protected $referral;
@@ -144,7 +149,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'city' => $this->getCity(),
             'postalCode' => $this->getPostalCode(),
             'isDeployed' => $this->getIsDeployed(),
-            'type' => $this->getType()
+            'type' => $this->getType(),
+            'phone' => $this->getPhone()
         ];
     }
 
@@ -362,5 +368,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsDeployed(bool $isDeployed): void
     {
         $this->isDeployed = $isDeployed;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param string|null $phone
+     */
+    public function setPhone(?string $phone): void
+    {
+        $this->phone = $phone;
     }
 }
