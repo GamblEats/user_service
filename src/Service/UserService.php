@@ -43,6 +43,11 @@ class UserService
             $user->setCity($request["city"]);
         }
 
+        if (isset($request["phone"]) && $request["phone"] !== "") {
+            $user->setPhone($request["phone"]);
+        }
+
+
         if (isset($request["postalCode"]) && $request["postalCode"] !== "") {
             $user->setPostalCode($request["postalCode"]);
         }
@@ -92,6 +97,10 @@ class UserService
 
         if (isset($request["city"]) && $request["city"] !== $user->getCity()) {
             $user->setCity($request["city"]);
+        }
+
+        if (isset($request["phone"]) && $request["phone"] !== $user->getPhone()) {
+            $user->setPhone($request["phone"]);
         }
 
         if (isset($request["postalCode"]) && $request["postalCode"] !== $user->getPostalCode()) {
