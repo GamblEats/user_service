@@ -39,11 +39,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @MongoDB\Field(type="string")
      */
-    protected mixed $name = null;
-
-    /**
-     * @MongoDB\Field(type="string")
-     */
     protected mixed $firstName = null;
 
     /**
@@ -118,16 +113,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setId(mixed $id): void
     {
         $this->_id = $id;
-    }
-
-    public function getName(): mixed
-    {
-        return $this->name;
-    }
-
-    public function setName(mixed $name): void
-    {
-        $this->name = $name;
     }
 
     public function getEmail(): string

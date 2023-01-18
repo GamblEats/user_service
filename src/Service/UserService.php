@@ -26,10 +26,6 @@ class UserService
             $user->setLastName($request["lastName"]);
         }
 
-        if (isset($request["lastName"]) && $request["lastName"] !== "") {
-            $user->setName($request["lastName"]);
-        }
-
         if (isset($request["email"]) && $request["email"] !== "") {
             $user->setEmail($request["email"]);
         }
