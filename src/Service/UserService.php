@@ -34,8 +34,9 @@ class UserService
             $user->setEmail($request["email"]);
         }
 
-        if (isset($request["phone"]) && $request["phone"] !== "") {
-            $user->setType($request["phone"]);
+        if (isset($request["role"]) && $request["role"] !== "") {
+            $roles[$request["role"]] = true;
+            $user->setType($roles);
         }
 
         if (isset($request["city"]) && $request["city"] !== "") {

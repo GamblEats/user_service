@@ -48,17 +48,32 @@ class UserController extends AbstractController
     {
         $response = new JsonResponse();
         $requestData = json_decode($request->getContent(), true);
+        $alreadyExist = $this->dm->getRepository(User::class)->findOneBy(['email' => $requestData["email"]]);
+        if ($alreadyExist) {
+            $roles = $alreadyExist->getType();
+            if (in_array($requestData["role"], $roles)) {
+                $response->setData('A user is already create with this address and this roles');
+                $response->setStatusCode(401);
+                $this->logger->info('Already exists to : ' . $requestData["email"]);
+                return $response;
+            } else {
+                $newRoles = [];
+                foreach ($alreadyExist->getType() as $t) {
+                    $newRoles[$t] = true;
+                }
+                $newRoles[$requestData["role"]] = true;
+                $alreadyExist->setType($newRoles);
+                $this->dm->persist($alreadyExist);
+                $this->dm->flush();
+                $response->setStatusCode(301);
+                $response->setData("You add a role");
 
-        $user = $this->userService->userSetters($requestData, 'gambleats-' . ByteString::fromRandom(8)->toString());
-
-        if ($this->dm->getRepository(User::class)->findOneBy(['email' => $requestData["email"]])) {
-            $response->setData('A user is already create with this address');
-            $response->setStatusCode(401);
-            $this->logger->info('Already exists to : ' . $requestData["email"]);
-            return $response;
+                return $response;
+            }
         }
 
         try {
+            $user = $this->userService->userSetters($requestData, 'gambleats-' . ByteString::fromRandom(8)->toString());
             $this->dm->persist($user);
             $this->dm->flush();
             $response->setData('A user was be created');
