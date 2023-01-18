@@ -28,7 +28,7 @@ class Order
     /**
      * @MongoDB\ReferenceOne(targetDocument=User::class, inversedBy="orders", storeAs="id")
      */
-    protected ?User $client;
+    protected User $client;
 
     /**
      * @MongoDB\ReferenceOne(targetDocument=User::class, inversedBy="ordersToDeliver", storeAs="id")
@@ -216,23 +216,22 @@ class Order
             'startTime' => $this->getStartTime()?->format('c'),
             'endDate' => $this->getEndTime()?->format('c'),
             'items' => $itemsArray,
-            'menus' => $menuArray,
-            'address' => $this->getClient()?->getAddress()
+            'menus' => $menuArray
         ];
     }
 
     /**
-     * @return ?User
+     * @return User
      */
-    public function getClient(): ?User
+    public function getClient(): User
     {
         return $this->client;
     }
 
     /**
-     * @param ?User $user
+     * @param User $user
      */
-    public function setClient(?User $user): void
+    public function setClient(User $user): void
     {
         $this->client = $user;
     }
