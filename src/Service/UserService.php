@@ -123,9 +123,13 @@ class UserService
             $user->setPostalCode($request["postalCode"]);
         }
 
-        if (isset($request["isDeployed"]) && $request["isDeployed"]) {
-            $value = (bool) $request["isDeployed"];
-            $user->setIsDeployed($value);
+        if (isset($request["isDeployed"])) {
+            if ($request["isDeployed"] === "false" || $request["isDeployed"] === false) {
+                $user->setIsDeployed(false);
+            }
+            if ($request["isDeployed"] === "true" || $request["isDeployed"] === true) {
+                $user->setIsDeployed(true);
+            }
         }
 
         if (isset($request["ban"]) && (bool)$request["ban"]) {
