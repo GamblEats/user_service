@@ -119,8 +119,12 @@ class UserController extends AbstractController
                     foreach ($user->getReferral() as $ref) {
                         $referalUser = $this->dm->getRepository(User::class)->findOneBy(['_id' => $ref]);
                         if ($referalUser) {
-                            $userArray['referralList'][] = $referalUser->getFirstName() . ' ' .$referalUser->getLastName();
+                            $userArray['referralList'][] = [
+                                'name' => $referalUser->getFirstName() . ' ' .$referalUser->getLastName(),
+                                'isActivated' => count($referalUser->getOrders()) > 1
+                            ];
                         }
+                        $userArray['referralCount'] = count($userArray['referralList']);
                     }
                 }
                 $responseArray = [
