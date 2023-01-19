@@ -163,7 +163,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/users/{userId}", name="user_edit", methods={"PATCH"})
+     * @Route("/users/{userId}", name="user_edit", methods={"PATCH", "PUT"})
      * @param Request $request
      * @param string $userId
      * @return JsonResponse
