@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Document\Notification;
 use App\Document\Order;
 use App\Document\User;
 use DateTime;
@@ -82,13 +83,23 @@ class OrderService
             $order->setDeliveryPrice($request["deliveryPrice"]);
         }
 
-        if(isset($request["status"]) && in_array($request["status"], Order::StatusArray)) {
-            $order->setStatus($request["status"]);
-        }
-
         if(isset($request["client"]) && $request["client"] !== $order->getClient()->getId()) {
             $client = $documentManager->getRepository(User::class)->findOneBy(['_id' => $request["client"]]);
             $order->setClient($client);
+        }
+
+        if(isset($request["status"]) && in_array($request["status"], Order::StatusArray)) {
+            $order->setStatus($request["status"]);
+            if ($request["status"] === "DELIVERED") {
+                $client = $order->getClient();
+                $notif = new Notification();
+                $notif->setTitle('Commande Livrée');
+                $notif->setMessage("Votre commande a été livrée, n'hésitez pas à la noter!");
+                $notif->setUser($client);
+                $notif->setIsRead(false);
+                $documentManager->persist($notif);
+                $documentManager->flush();
+            }
         }
 
         if(isset($request["deliverer"]) && $request["deliverer"] !== $order->getDeliverer()->getId()) {
