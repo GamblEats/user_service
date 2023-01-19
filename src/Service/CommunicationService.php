@@ -12,6 +12,17 @@ class CommunicationService
         $this->urlRestaurant = $urlRestaurant;
     }
 
+    public function getAllRestaurants(HttpClientInterface $httpClient)
+    {
+        $response = $httpClient->request(
+            'GET',
+            $this->urlRestaurant . 'restaurants'
+        );
+
+
+        return json_decode($response->getContent(), true);
+    }
+
     public function getRestaurantById(HttpClientInterface $httpClient, string $idRestaurant)
     {
         $response = $httpClient->request(

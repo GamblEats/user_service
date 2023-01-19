@@ -229,6 +229,76 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/stats", name="stats_general", methods={"GET"})
+     */
+    public function getStats(): JsonResponse
+    {
+        $response = new JsonResponse();
+        $data = [];
+        $tempItemCount = [];
+        $orders = $this->dm->getRepository(Order::class)->findAll();
+        $temp = [];
+        for ($i = 0; $i <= 31; $i++) {
+            $newDate = new DateTime();
+            $actualDate = $newDate->modify('-' . $i . 'days')->format('Y-m-d');
+            $temp[$actualDate] = 0;
+        }
+
+        foreach ($orders as $order) {
+            $temp[$order->getStartTime()->format('Y-m-d')] += 1;
+            foreach ($order->getItems() as $key => $value) {
+                if (isset($tempItemCount[$value["name"]])) {
+                    $tempItemCount[$value["name"]]["count"] += 1;
+                } else {
+                    $tempItemCount[$value["name"]]["count"] = 1;
+                    $tempItemCount[$value["name"]]["restaurant"] = $order->getRestaurant()["name"];
+                }
+            }
+            foreach ($order->getMenus() as $key => $value) {
+                foreach ($value["items"] as $item) {
+                    if (isset($tempItemCount[$item["name"]])) {
+                        if ($item["name"] === "Cobb Salad") {
+                            dd($item["name"]);
+                        }
+                        $tempItemCount[$item["name"]]["count"] += 1;
+                    } else {
+                        if ($item["name"] === "Cobb Salad") {
+                            dd($item["name"]);
+                        }
+                        $tempItemCount[$item["name"]]["count"] = 1;
+                        $tempItemCount[$item["name"]]["restaurant"] = $order->getRestaurant()["name"];
+                    }
+                }
+            }
+        }
+        foreach ($tempItemCount as $key => $value) {
+            if ($item !== null) {
+                $temp3 = [
+                    "item" => $key,
+                    "count" => $value["count"],
+                    "restaurant" => $value["restaurant"]
+                ];
+                $data["itemCount"][] = $temp3;
+            }
+        }
+        $data["ordersCount"] = $temp;
+        $data["nbUser"] = count($this->dm->getRepository(User::class)->findBy([
+            'type.client' => true
+        ]));
+        $data["nbDeliverer"] = count($this->dm->getRepository(User::class)->findBy([
+            'type.deliverer' => true
+        ]));
+        $data["nbRestaurateur"] = count($this->dm->getRepository(User::class)->findBy([
+            'type.restaurant' => true
+        ]));
+        $data["nbRestaurant"] = count($this->communicationService->getAllRestaurants($this->httpClient));
+        $response->setData($data);
+        $response->setStatusCode(200);
+
+        return $response;
+    }
+
+    /**
      * @Route("/admins/restaurants/{id}/pending", name="restaurant_pending", methods={"GET"})
      * @param Request $request
      * @param string $id
