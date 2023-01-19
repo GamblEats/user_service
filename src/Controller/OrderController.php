@@ -263,17 +263,19 @@ class OrderController extends AbstractController
     {
         $response = new JsonResponse();
         $data = [];
+        $data["ordersCount"] = [];
         $tempItemCount = [];
         $orders = $this->dm->getRepository(Order::class)->findAll();
         $temp = [];
         for ($i = 0; $i <= 31; $i++) {
             $newDate = new DateTime();
             $actualDate = $newDate->modify('-' . $i . 'days')->format('Y-m-d');
-            $temp[$actualDate] = 0;
+            $temp[$actualDate] = [];
+            $temp[$actualDate]["nbOrders"] = 0;
+            $temp[$actualDate]["price"] = 0;
         }
 
         foreach ($orders as $order) {
-            $temp[$order->getStartTime()->format('Y-m-d')] += 1;
             foreach ($order->getItems() as $key => $value) {
                 if (isset($tempItemCount[$value["name"]])) {
                     $tempItemCount[$value["name"]]["count"] += 1;
@@ -298,7 +300,19 @@ class OrderController extends AbstractController
                     }
                 }
             }
+            $temp[$order->getStartTime()->format('Y-m-d')]["nbOrders"] += 1;
+            $temp[$order->getStartTime()->format('Y-m-d')]["price"] += $order->getPrice();
         }
+
+        foreach ($temp as $key => $value) {
+            $temp2 = [
+                'date' => $key,
+                'nbOrders' => $value["nbOrders"],
+                'total' => round($value["price"], 2)
+            ];
+            $data["ordersCount"][] = $temp2;
+        }
+
         foreach ($tempItemCount as $key => $value) {
             if ($item !== null) {
                 $temp3 = [
@@ -309,7 +323,6 @@ class OrderController extends AbstractController
                 $data["itemCount"][] = $temp3;
             }
         }
-        $data["ordersCount"] = $temp;
         $data["nbUser"] = count($this->dm->getRepository(User::class)->findBy([
             'type.client' => true
         ]));
