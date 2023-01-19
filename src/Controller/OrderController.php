@@ -43,13 +43,15 @@ class OrderController extends AbstractController
         $user = $this->dm->getRepository(User::class)->findOneBy(['_id' => $idUser]);
         $orders = $this->dm->getRepository(Order::class)->findBy(['client' => $user]);
         foreach ($orders as $order) {
-            $orderArray = $order->toArray();
-            $restaurant = $this->communicationService->getRestaurantById($this->httpClient, $order->getRestaurant()["id"]);
-            $orderArray['restaurant'] = [
-                "name" => $restaurant["name"],
-                "address" => $restaurant["address"],
-            ];
-            $ordersArray[] = $orderArray;
+            if ($order->getStatus() && $order->getStatus() !== "CANCELED" && $order->getStatus() !== "DELIVERED") {
+                $orderArray = $order->toArray();
+                $restaurant = $this->communicationService->getRestaurantById($this->httpClient, $order->getRestaurant()["id"]);
+                $orderArray['restaurant'] = [
+                    "name" => $restaurant["name"],
+                    "address" => $restaurant["address"],
+                ];
+                $ordersArray[] = $orderArray;
+            }
         }
 
         $response->setData($ordersArray);
