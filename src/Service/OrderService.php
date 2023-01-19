@@ -102,7 +102,7 @@ class OrderService
             }
         }
 
-        if(isset($request["deliverer"]) && $request["deliverer"] !== $order->getDeliverer()->getId()) {
+        if(isset($request["deliverer"]) && $request["deliverer"] !== $order->getDeliverer()?->getId()) {
             $deliverer = $documentManager->getRepository(User::class)->findOneBy(['_id' => $request["deliverer"]]);
             $order->setDeliverer($deliverer);
         }

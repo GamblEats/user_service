@@ -34,7 +34,7 @@ class Order
     /**
      * @MongoDB\ReferenceOne(targetDocument=User::class, inversedBy="ordersToDeliver", storeAs="id")
      */
-    protected User $deliverer;
+    protected ?User $deliverer = null;
 
     /**
      * @MongoDB\Field(type="collection", type="raw")
@@ -253,17 +253,17 @@ class Order
     }
 
     /**
-     * @return User
+     * @return ?User
      */
-    public function getDeliverer(): User
+    public function getDeliverer(): ?User
     {
         return $this->deliverer;
     }
 
     /**
-     * @param User $deliverer
+     * @param ?User $deliverer
      */
-    public function setDeliverer(User $deliverer): void
+    public function setDeliverer(?User $deliverer): void
     {
         $this->deliverer = $deliverer;
     }
