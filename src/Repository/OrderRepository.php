@@ -6,6 +6,7 @@ use App\Document\Order;
 use DateTime;
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use MongoDB\BSON\ObjectId;
+use MongoDB\BSON\Regex;
 
 class OrderRepository extends DocumentRepository
 {
@@ -26,12 +27,12 @@ class OrderRepository extends DocumentRepository
     public function findAllByCity(string $city)
     {
         $qb = $this->dm->createQueryBuilder(Order::class)
-            ->field('restaurant.city')->equals($city)
-            ->field('status')->equals("READY_TO_PICKUP")
-            ->getQuery()
-            ->execute()->toArray();
+            ->field('restaurant.city')->equals(new Regex('^' . $city, 'i'))
+            ->field('deliverer')->equals(null);
+        $qb->addOr($qb->expr()->field('status')->equals("IN_PREPARATION"));
+        $qb->addOr($qb->expr()->field('status')->equals("READY_TO_PICKUP"));
 
-        return $qb;
+        return $qb->getQuery()->execute();
     }
 
     public function findAllByDeliverer(string $idDeliverer)
@@ -39,6 +40,8 @@ class OrderRepository extends DocumentRepository
         $qb = $this->dm->createQueryBuilder(Order::class)
             ->field('deliverer')->equals(new ObjectId($idDeliverer));
 
+        $qb->addOr($qb->expr()->field('status')->equals('IN_PREPARATION'));
+        $qb->addOr($qb->expr()->field('status')->equals('READY_TO_PICKUP'));
         $qb->addOr($qb->expr()->field('status')->equals('ON_THE_WAY'));
         $qb->addOr($qb->expr()->field('status')->equals('AT_YOUR_DOOR'));
 
