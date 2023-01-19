@@ -201,14 +201,18 @@ class Order
     public function toArray(): array
     {
         $itemsArray = $menuArray = [];
-
-        foreach ($this->getItems() as $item) {
-            $itemsArray[] = $item;
+        if ($this->getItems()) {
+            foreach ($this->getItems() as $item) {
+                $itemsArray[] = $item;
+            }
         }
 
-        foreach ($this->getMenus() as $menu) {
-            $menuArray[] = $menu;
+        if( $this->getMenus()) {
+            foreach ($this->getMenus() as $menu) {
+                $menuArray[] = $menu;
+            }
         }
+
         return [
             'id' => $this->getId(),
             'status' => $this->getStatus(),
