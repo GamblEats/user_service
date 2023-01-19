@@ -65,6 +65,7 @@ class UserController extends AbstractController
                 $alreadyExist->setType($newRoles);
                 $this->dm->persist($alreadyExist);
                 $this->dm->flush();
+                $this->logger->info('New role was added with : ' . $requestData["role"] . ' to ' . $alreadyExist->getId());
                 $response->setStatusCode(200);
                 $response->setData("You add a role");
 
@@ -134,11 +135,14 @@ class UserController extends AbstractController
                 ];
                 $response->setData($responseArray);
                 $response->setStatusCode(200);
+                $this->logger->info($user->getId() . ' just connect');
             } else {
                 $response->setData('Wrong Password');
                 $response->setStatusCode(502);
+                $this->logger->info($user->getId() . ' try connect');
             }
         } else {
+            $this->logger->info('Somebody try connect');
             $response->setData('Any Password');
             $response->setStatusCode(502);
         }
