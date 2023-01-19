@@ -44,7 +44,7 @@ class OrderController extends AbstractController
         $orders = $this->dm->getRepository(Order::class)->findBy(['client' => $user]);
         foreach ($orders as $order) {
             $orderArray = $order->toArray();
-            $restaurant = $this->communicationService->getRestaurantById($this->httpClient, $order->getRestaurant());
+            $restaurant = $this->communicationService->getRestaurantById($this->httpClient, $order->getRestaurant()["id"]);
             $orderArray['restaurant'] = [
                 "name" => $restaurant["name"],
                 "address" => $restaurant["address"],
