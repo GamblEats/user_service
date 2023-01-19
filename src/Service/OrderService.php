@@ -100,6 +100,31 @@ class OrderService
                 $documentManager->persist($notif);
                 $documentManager->flush();
             }
+            if ($request["status"] === "DELIVERED") {
+                $deliverer = $order->getDeliverer();
+                $notif = new Notification();
+                $notif->setTitle('Commande Livrée');
+                $notif->setMessage("Vous avez bien livrée, vous avez gagne " . $order->getRestaurant()["deliveryPrice"]);
+                $notif->setUser($deliverer);
+                $notif->setIsRead(false);
+                $documentManager->persist($notif);
+                $documentManager->flush();
+            }
+            if ($request["status"] === "CANCELED") {
+                $owner = $order->getRestaurant() ? $order->getRestaurant()['owner'] : null;
+                if ($owner) {
+                    $ownerData = $documentManager->getRepository(User::class)->findOneBy(['_id' => $owner]);
+                    if ($ownerData) {
+                        $notif = new Notification();
+                        $notif->setTitle('Commande Annulé');
+                        $notif->setMessage("La commande au nom de " . $order->getClient()->getFirstName() . 'a été annulé');
+                        $notif->setUser($ownerData);
+                        $notif->setIsRead(false);
+                        $documentManager->persist($notif);
+                        $documentManager->flush();
+                    }
+                }
+            }
         }
 
         if(isset($request["deliverer"]) && $request["deliverer"] !== $order->getDeliverer()?->getId()) {
