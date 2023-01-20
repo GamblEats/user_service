@@ -276,30 +276,30 @@ class OrderController extends AbstractController
         }
 
         foreach ($orders as $order) {
-            foreach ($order->getItems() as $key => $value) {
-                if (isset($tempItemCount[$value["name"]])) {
-                    $tempItemCount[$value["name"]]["count"] += 1;
-                } else {
-                    $tempItemCount[$value["name"]]["count"] = 1;
-                    $tempItemCount[$value["name"]]["restaurant"] = $order->getRestaurant()["name"];
-                }
-            }
-            foreach ($order->getMenus() as $key => $value) {
-                foreach ($value["items"] as $item) {
-                    if (isset($tempItemCount[$item["name"]])) {
-                        if ($item["name"] === "Cobb Salad") {
-                            dd($item["name"]);
-                        }
-                        $tempItemCount[$item["name"]]["count"] += 1;
+            if ($order->getItems()) {
+                foreach ($order->getItems() as $key => $value) {
+                    if (isset($tempItemCount[$value["name"]])) {
+                        $tempItemCount[$value["name"]]["count"] += 1;
                     } else {
-                        if ($item["name"] === "Cobb Salad") {
-                            dd($item["name"]);
-                        }
-                        $tempItemCount[$item["name"]]["count"] = 1;
-                        $tempItemCount[$item["name"]]["restaurant"] = $order->getRestaurant()["name"];
+                        $tempItemCount[$value["name"]]["count"] = 1;
+                        $tempItemCount[$value["name"]]["restaurant"] = $order->getRestaurant()["name"];
                     }
                 }
             }
+
+            if ($order->getMenus()) {
+                foreach ($order->getMenus() as $key => $value) {
+                    foreach ($value["items"] as $item) {
+                        if (isset($tempItemCount[$item["name"]])) {
+                            $tempItemCount[$item["name"]]["count"] += 1;
+                        } else {
+                            $tempItemCount[$item["name"]]["count"] = 1;
+                            $tempItemCount[$item["name"]]["restaurant"] = $order->getRestaurant()["name"];
+                        }
+                    }
+                }
+            }
+
             $temp[$order->getStartTime()->format('Y-m-d')]["nbOrders"] += 1;
             $temp[$order->getStartTime()->format('Y-m-d')]["price"] += $order->getPrice();
         }
