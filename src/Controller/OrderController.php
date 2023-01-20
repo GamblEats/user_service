@@ -208,22 +208,29 @@ class OrderController extends AbstractController
             if ($order->getDeliveryStartTime() && $order->getStartTime()) {
                 $averageTimeOrder += ($order->getDeliveryStartTime()->getTimestamp() - $order->getStartTime()->getTimestamp()) / 60;
             }
-            foreach ($order->getItems() as $key => $value) {
-                if (isset($tempItemCount[$value["name"]])) {
-                    $tempItemCount[$value["name"]] += 1;
-                } else {
-                    $tempItemCount[$value["name"]] = 1;
-                }
-            }
-            foreach ($order->getMenus() as $key => $value) {
-                foreach ($value["items"] as $item) {
-                    if (isset($tempItemCount[$item["name"]])) {
-                        $tempItemCount[$item["name"]] += 1;
+
+            if ($order->getItems()) {
+                foreach ($order->getItems() as $key => $value) {
+                    if (isset($tempItemCount[$value["name"]])) {
+                        $tempItemCount[$value["name"]] += 1;
                     } else {
-                        $tempItemCount[$item["name"]] = 1;
+                        $tempItemCount[$value["name"]] = 1;
                     }
                 }
             }
+
+            if ($order->getMenus()) {
+                foreach ($order->getMenus() as $key => $value) {
+                    foreach ($value["items"] as $item) {
+                        if (isset($tempItemCount[$item["name"]])) {
+                            $tempItemCount[$item["name"]] += 1;
+                        } else {
+                            $tempItemCount[$item["name"]] = 1;
+                        }
+                    }
+                }
+            }
+
             $temp[$order->getStartTime()->format('Y-m-d')]["nbOrders"] += 1;
             $temp[$order->getStartTime()->format('Y-m-d')]["price"] += $order->getPrice();
         }
@@ -238,13 +245,11 @@ class OrderController extends AbstractController
         }
 
         foreach ($tempItemCount as $key => $value) {
-            if ($item !== null) {
-                $temp3 = [
-                    "item" => $key,
-                    "count" => $value,
-                ];
-                $data["itemCount"][] = $temp3;
-            }
+            $temp3 = [
+                "item" => $key,
+                "count" => $value,
+            ];
+            $data["itemCount"][] = $temp3;
         }
 
         $data["average"] = round($averagePriceOrder / $ordersCount, 2);
